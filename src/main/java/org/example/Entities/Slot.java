@@ -1,6 +1,7 @@
 package org.example.Entities;
 
 import org.example.Enums.CarColor;
+import org.example.Exceptions.CarAlreadyParkedException;
 import org.example.Exceptions.InvalidTicketException;
 
 public class Slot {
@@ -29,11 +30,13 @@ public class Slot {
             this.ticket = null;
             return car;
         }
-        throw new InvalidTicketException("Car not found");
+        throw new InvalidTicketException("Ticket is invalid");
     }
 
-    public boolean isCarParked(Car car) {
-        return !isEmpty() && this.car.isSameCar(car);
+    public void isCarParked(Car car) {
+        if (!isEmpty() && this.car.isSameCar(car)) {
+            throw new CarAlreadyParkedException("Car is already parked");
+        }
     }
 
     public boolean isCarOfColor(CarColor color) {

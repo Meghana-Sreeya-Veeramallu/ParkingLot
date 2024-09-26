@@ -2,8 +2,8 @@ package org.example.Entities;
 
 import org.example.Enums.CarColor;
 import org.example.Exceptions.CannotCreateAParkingLotException;
-import org.example.Exceptions.CarAlreadyParkedException;
 import org.example.Exceptions.CarNotFoundException;
+import org.example.Exceptions.InvalidTicketException;
 import org.example.Exceptions.ParkingLotFullException;
 
 import java.util.ArrayList;
@@ -33,9 +33,7 @@ public class ParkingLot {/**/
 
     public void checkIfCarIsParked(Car car) {
         for (Slot slot : slots) {
-            if (slot.isCarParked(car)) {
-                throw new CarAlreadyParkedException("Car is already parked");
-            }
+            slot.isCarParked(car);
         }
     }
 
@@ -54,10 +52,10 @@ public class ParkingLot {/**/
             try {
                 Car car = slot.unpark(ticket);
                 return car;
-            } catch (CarNotFoundException _) {
+            } catch (InvalidTicketException _) {
             }
         }
-        throw new CarNotFoundException("Car is not found");
+        throw new InvalidTicketException("Ticket is invalid");
     }
 
     private Slot getNearestSlot() {

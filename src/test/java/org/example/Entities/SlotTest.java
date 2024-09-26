@@ -1,6 +1,7 @@
 package org.example.Entities;
 
 import org.example.Enums.CarColor;
+import org.example.Exceptions.CarAlreadyParkedException;
 import org.example.Exceptions.InvalidTicketException;
 import org.junit.jupiter.api.Test;
 
@@ -61,7 +62,7 @@ class SlotTest {
         Car car = new Car("TS-1234", CarColor.RED);
         slot.park(car);
 
-        assertTrue(slot.isCarParked(car));
+        assertThrows(CarAlreadyParkedException.class, () -> slot.isCarParked(car));
     }
 
     @Test
@@ -69,7 +70,7 @@ class SlotTest {
         Slot slot = new Slot();
         Car car = new Car("TS-1234", CarColor.RED);
 
-        assertFalse(slot.isCarParked(car));
+        assertDoesNotThrow(() -> slot.isCarParked(car));
     }
 
     // Tests for isCarOfColor() method
