@@ -1,5 +1,6 @@
 package org.example.Entities;
 
+import org.example.Enums.CarColor;
 import org.example.Exceptions.InvalidTicketException;
 
 public class Slot {
@@ -33,5 +34,13 @@ public class Slot {
 
     public boolean isCarParked(Car car) {
         return !isEmpty() && this.car.isSameCar(car);
+    }
+
+    public boolean isCarOfColor(CarColor color) {
+        return !isEmpty() && car.isSameColor(color);
+    }
+
+    public boolean hasSameRegistrationNumber(String registrationNumber) {
+        return !isEmpty() && car.hasSameRegistrationNumber(registrationNumber);
     }
 }

@@ -45,4 +45,19 @@ class CarTest {
 
         assertFalse(firstCar.isSameCar(secondCar));
     }
+
+    // Tests for hasSameRegistrationNumber() method
+    @Test
+    void testHasSameRegistrationNumberIfRegistrationNumbersAreSame() {
+        Car car = new Car("TS-1234", CarColor.RED);
+
+        assertTrue(car.hasSameRegistrationNumber("TS-1234"));
+    }
+
+    @Test
+    void testHasSameRegistrationNumberIfRegistrationNumbersAreDifferent() {
+        Car car = new Car("TS-1234", CarColor.RED);
+
+        assertFalse(car.hasSameRegistrationNumber("TS-1235"));
+    }
 }

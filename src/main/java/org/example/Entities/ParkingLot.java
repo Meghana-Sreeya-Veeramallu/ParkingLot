@@ -1,5 +1,6 @@
 package org.example.Entities;
 
+import org.example.Enums.CarColor;
 import org.example.Exceptions.CannotCreateAParkingLotException;
 import org.example.Exceptions.CarAlreadyParkedException;
 import org.example.Exceptions.CarNotFoundException;
@@ -56,7 +57,7 @@ public class ParkingLot {/**/
             } catch (CarNotFoundException _) {
             }
         }
-        throw new CarNotFoundException("Car not found");
+        throw new CarNotFoundException("Car is not found");
     }
 
     private Slot getNearestSlot() {
@@ -66,6 +67,26 @@ public class ParkingLot {/**/
             }
         }
         throw new ParkingLotFullException("Parking lot is full");
+    }
+
+    public int countCarsByColor(CarColor color) {
+        int count = 0;
+        for (Slot slot : slots) {
+            if (slot.isCarOfColor(color)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getCarSlotNumberByRegistrationNumber(String registrationNumber) {
+        for (int i = 0; i < slots.size(); i++) {
+            Slot slot = slots.get(i);
+            if (slot.hasSameRegistrationNumber(registrationNumber)) {
+                return i + 1;
+            }
+        }
+        throw new CarNotFoundException("Car with given registration number is not found");
     }
 }
 

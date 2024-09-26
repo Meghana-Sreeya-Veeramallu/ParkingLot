@@ -71,4 +71,42 @@ class SlotTest {
 
         assertFalse(slot.isCarParked(car));
     }
+
+    // Tests for isCarOfColor() method
+    @Test
+    void testIsCarOfColorIfCarIsOfSameColor() {
+        Slot slot = new Slot();
+        Car car = new Car("TS-1234", CarColor.RED);
+        slot.park(car);
+
+        assertTrue(slot.isCarOfColor(CarColor.RED));
+    }
+
+    @Test
+    void testIsCarOfColorIfCarIsOfDifferentColor() {
+        Slot slot = new Slot();
+        Car car = new Car("TS-1234", CarColor.RED);
+        slot.park(car);
+
+        assertFalse(slot.isCarOfColor(CarColor.BLUE));
+    }
+
+    // Tests for hasSameRegistrationNumber() method
+    @Test
+    void testHasSameRegistrationNumberIfCarRegistrationNumbersAreSame() {
+        Slot slot = new Slot();
+        Car car = new Car("TS-1234", CarColor.RED);
+        slot.park(car);
+
+        assertTrue(slot.hasSameRegistrationNumber("TS-1234"));
+    }
+
+    @Test
+    void testHasSameRegistrationNumberIfCarRegistrationNumbersAreDifferent() {
+        Slot slot = new Slot();
+        Car car = new Car("TS-1234", CarColor.RED);
+        slot.park(car);
+
+        assertFalse(slot.hasSameRegistrationNumber("TS-1235"));
+    }
 }

@@ -18,4 +18,8 @@ public class Car {
     public boolean isSameCar(Car car) {
         return this.registrationNumber.equals(car.registrationNumber);
     }
+
+    public boolean hasSameRegistrationNumber(String registrationNumber) {
+        return this.registrationNumber.equals(registrationNumber);
+    }
 }

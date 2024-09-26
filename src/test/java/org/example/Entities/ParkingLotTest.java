@@ -2,11 +2,13 @@ package org.example.Entities;
 
 import org.example.Enums.CarColor;
 import org.example.Exceptions.CarAlreadyParkedException;
+import org.example.Exceptions.CarNotFoundException;
 import org.example.Exceptions.InvalidTicketException;
 import org.example.Exceptions.ParkingLotFullException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class ParkingLotTest {
 
@@ -94,6 +96,108 @@ class ParkingLotTest {
         Ticket invalidTicket = new Ticket();
 
         assertThrows(InvalidTicketException.class, () -> parkingLot.unpark(invalidTicket));
+    }
+
+    // Tests for countCarsByColor() method
+    @Test
+    public void testCountCarsByColorWhenNoCarIsParked() {
+        ParkingLot parkingLot = new ParkingLot(5);
+        int expectedCount = 0;
+
+        int actualCount = parkingLot.countCarsByColor(CarColor.RED);
+
+        assertEquals(expectedCount, actualCount);
+    }
+
+    @Test
+    public void testCountCarsByColorWhenCarsAreParked() {
+        ParkingLot parkingLot = new ParkingLot(5);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        Car thirdCar = new Car("TS-1236", CarColor.RED);
+        parkingLot.park(firstCar);
+        parkingLot.park(secondCar);
+        parkingLot.park(thirdCar);
+        int expectedCount = 2;
+
+        int actualCount = parkingLot.countCarsByColor(CarColor.RED);
+
+        assertEquals(expectedCount, actualCount);
+    }
+
+    @Test
+    public void testCountCarsByColorWhenCarsAreParkedBySpyingOnParkingLot() {
+        ParkingLot parkingLot = spy(new ParkingLot(5));
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        Car thirdCar = new Car("TS-1236", CarColor.RED);
+        parkingLot.park(firstCar);
+        parkingLot.park(secondCar);
+        parkingLot.park(thirdCar);
+
+        parkingLot.countCarsByColor(CarColor.RED);
+
+        verify(parkingLot, times(1)).countCarsByColor(CarColor.RED);
+    }
+
+    // Tests for getSlotNumberByRegistrationNumber() method
+    @Test
+    public void testGetCarSlotNumberByRegistrationNumberWhenParkingLotIsEmpty() {
+        ParkingLot parkingLot = new ParkingLot(5);
+        String registrationNumber = "TS-1234";
+
+        assertThrows(CarNotFoundException.class, () -> parkingLot.getCarSlotNumberByRegistrationNumber(registrationNumber));
+    }
+
+    @Test
+    public void testGetCarSlotNumberByRegistrationNumberWhenCarIsParked() {
+        ParkingLot parkingLot = new ParkingLot(5);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        parkingLot.park(firstCar);
+        String registrationNumber = "TS-1234";
+        int expectedSlotNumber = 1;
+
+        int actualSlotNumber = parkingLot.getCarSlotNumberByRegistrationNumber(registrationNumber);
+
+        assertEquals(expectedSlotNumber, actualSlotNumber);
+    }
+
+    @Test
+    public void testGetCarSlotNumberByRegistrationNumberWhenCarIsParkedSecond() {
+        ParkingLot parkingLot = new ParkingLot(5);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        parkingLot.park(firstCar);
+        parkingLot.park(secondCar);
+        String registrationNumber = "TS-1235";
+        int expectedSlotNumber = 2;
+
+        int actualSlotNumber = parkingLot.getCarSlotNumberByRegistrationNumber(registrationNumber);
+
+        assertEquals(expectedSlotNumber, actualSlotNumber);
+    }
+
+    @Test
+    public void testGetCarSlotNumberByRegistrationNumberWhenCarIsNotPresent() {
+        ParkingLot parkingLot = new ParkingLot(2);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        parkingLot.park(firstCar);
+        parkingLot.park(secondCar);
+        String registrationNumber = "TS-1236";
+
+        assertThrows(CarNotFoundException.class, () -> parkingLot.getCarSlotNumberByRegistrationNumber(registrationNumber));
+    }
+
+    @Test
+    public void testGetCarSlotNumberByRegistrationNumberWhenCarIsParkedByAndUnparked(){
+        ParkingLot parkingLot = new ParkingLot(5);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Ticket ticket = parkingLot.park(firstCar);
+        parkingLot.unpark(ticket);
+        String registrationNumber = "TS-1234";
+
+        assertThrows(CarNotFoundException.class, () -> parkingLot.getCarSlotNumberByRegistrationNumber(registrationNumber));
     }
 
 }
