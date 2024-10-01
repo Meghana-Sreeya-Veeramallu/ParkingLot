@@ -5,6 +5,7 @@ import org.example.Exceptions.ParkingLotAlreadyAssigned;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class OwnerTest {
     @Test
@@ -84,5 +85,97 @@ class OwnerTest {
         owner.assign(attendant, parkingLot);
 
         assertThrows(ParkingLotAlreadyAssigned.class, () -> owner.assign(attendant, parkingLot));
+    }
+
+    // Tests for notifyWhenNull() method
+    @Test
+    void testNotifyWhenFullWhenParkingLotIsFull(){
+        Owner owner = spy(new Owner());
+        ParkingLot parkingLot = new ParkingLot(1);
+        owner.assign(owner, parkingLot);
+        Car car = new Car("TS-1234", CarColor.BLACK);
+
+        owner.park(car);
+
+        verify(owner, times(1)).notifyWhenFull(parkingLot);
+    }
+
+    @Test
+    void testNotifyWhenFullWhenParkingLotIsNotFull(){
+        Owner owner = spy(new Owner());
+        ParkingLot parkingLot = new ParkingLot(2);
+        owner.assign(owner, parkingLot);
+        Car car = new Car("TS-1234", CarColor.BLACK);
+
+        owner.park(car);
+
+        verify(owner, times(0)).notifyWhenFull(parkingLot);
+    }
+
+    @Test
+    void testNotifyWhenFullWhenMultipleParkingLotsAreFull(){
+        Owner owner = spy(new Owner());
+        ParkingLot firstParkingLot = new ParkingLot(1);
+        ParkingLot secondParkingLot = new ParkingLot(2);
+        owner.assign(owner, firstParkingLot);
+        owner.assign(owner, secondParkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.BLACK);
+        Car secondCar = new Car("TS-1235", CarColor.BLACK);
+        Car thirdCar = new Car("TS-1236", CarColor.BLACK);
+
+        owner.park(firstCar);
+        owner.park(secondCar);
+        owner.park(thirdCar);
+
+        verify(owner, times(1)).notifyWhenFull(firstParkingLot);
+        verify(owner, times(1)).notifyWhenFull(secondParkingLot);
+    }
+
+    // Tests for notifyWhenAvailable() method
+    @Test
+    void testNotifyWhenAvailableWhenParkingLotIsAvailable(){
+        Owner owner = spy(new Owner());
+        ParkingLot parkingLot = new ParkingLot(1);
+        owner.assign(owner, parkingLot);
+        Car car = new Car("TS-1234", CarColor.BLACK);
+
+        Ticket ticket = owner.park(car);
+        owner.unpark(ticket);
+
+        verify(owner, times(1)).notifyWhenAvailable(parkingLot);
+    }
+
+    @Test
+    void testNotifyWhenAvailableWhenParkingLotIsNotAvailable(){
+        Owner owner = spy(new Owner());
+        ParkingLot parkingLot = new ParkingLot(3);
+        owner.assign(owner, parkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.BLACK);
+        Car secondCar = new Car("TS-1235", CarColor.BLACK);
+
+        Ticket ticket = owner.park(firstCar);
+        owner.park(secondCar);
+        owner.unpark(ticket);
+
+        verify(owner, times(0)).notifyWhenAvailable(parkingLot);
+    }
+
+    @Test
+    void testNotifyWhenAvailableWhenSecondParkingLotIsAvailable(){
+        Owner owner = spy(new Owner());
+        ParkingLot firstParkingLot = new ParkingLot(2);
+        ParkingLot secondParkingLot = new ParkingLot(1);
+        owner.assign(owner, firstParkingLot);
+        owner.assign(owner, secondParkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.BLACK);
+        Car secondCar = new Car("TS-1235", CarColor.BLACK);
+        Car thirdCar = new Car("TS-1236", CarColor.BLACK);
+
+        owner.park(firstCar);
+        owner.park(secondCar);
+        Ticket ticket = owner.park(thirdCar);
+        owner.unpark(ticket);
+
+        verify(owner, times(1)).notifyWhenAvailable(secondParkingLot);
     }
 }

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class ParkingLot {/**/
     private final ArrayList<Slot> slots;
+    private final ArrayList<Notifiable> notifiables = new ArrayList<>();
 
     public ParkingLot(int capacity) {
         if (capacity <= 0) {
@@ -37,6 +38,24 @@ public class ParkingLot {/**/
         }
     }
 
+    public void registerNotifiable(Notifiable notifiable) {
+        if (!notifiables.contains(notifiable)) {
+            notifiables.add(notifiable);
+        }
+    }
+
+    private void notifyWhenFull() {
+        for (Notifiable notifiable : notifiables) {
+            notifiable.notifyWhenFull(this);
+        }
+    }
+
+    private void notifyWhenAvailable() {
+        for (Notifiable notifiable : notifiables) {
+            notifiable.notifyWhenAvailable(this);
+        }
+    }
+
     public Ticket park(Car car) {
         if (isFull()) {
             throw new ParkingLotFullException("Parking lot is full");
@@ -44,13 +63,20 @@ public class ParkingLot {/**/
         checkIfCarIsParked(car);
         Slot slot = getNearestSlot();
         Ticket ticket = slot.park(car);
+        if (isFull()) {
+            notifyWhenFull();
+        }
         return ticket;
     }
 
     public Car unpark(Ticket ticket) {
+        boolean wasFull = isFull();
         for (Slot slot : slots) {
             try {
                 Car car = slot.unpark(ticket);
+                if (wasFull) {
+                    notifyWhenAvailable();
+                }
                 return car;
             } catch (InvalidTicketException ignored) {
             }
@@ -87,4 +113,3 @@ public class ParkingLot {/**/
         throw new CarNotFoundException("Car with given registration number is not found");
     }
 }
-

@@ -1,19 +1,21 @@
 package org.example.Entities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-public class Owner extends Attendant {
-    private final Map<ParkingLot, ArrayList<Attendant>> parkingLotAssignments;
+public class Owner extends Attendant implements Notifiable{
 
     public Owner() {
         super();
-        this.parkingLotAssignments = new HashMap<>();
     }
 
     public void assign(Attendant attendant, ParkingLot parkingLot) {
         attendant.assign(parkingLot);
-        parkingLotAssignments.computeIfAbsent(parkingLot, k -> new ArrayList<>()).add(attendant);
+        parkingLot.registerNotifiable(this);
+    }
+
+    public void notifyWhenFull(ParkingLot parkingLot) {
+        System.out.println("Notifying to owner: Parking lot " + parkingLot + " is full");
+    }
+
+    public void notifyWhenAvailable(ParkingLot parkingLot) {
+        System.out.println("Notifying to owner: Parking lot " + parkingLot + " is available");
     }
 }
