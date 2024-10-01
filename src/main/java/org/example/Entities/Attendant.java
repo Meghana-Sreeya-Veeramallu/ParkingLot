@@ -8,7 +8,7 @@ import org.example.Exceptions.ParkingLotFullException;
 import java.util.ArrayList;
 
 public class Attendant {
-    private ArrayList<ParkingLot> parkingLots;
+    protected ArrayList<ParkingLot> parkingLots;
 
     public Attendant(){
         this.parkingLots = new ArrayList<>();
@@ -21,7 +21,7 @@ public class Attendant {
         this.parkingLots.add(parkingLot);
     }
 
-    private void checkifCarIsParked(Car car){
+    protected void checkifCarIsParked(Car car){
         for(ParkingLot parkingLot : parkingLots){
             parkingLot.checkIfCarIsParked(car);
         }
