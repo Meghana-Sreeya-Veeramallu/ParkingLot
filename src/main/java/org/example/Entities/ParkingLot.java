@@ -52,7 +52,7 @@ public class ParkingLot {/**/
             try {
                 Car car = slot.unpark(ticket);
                 return car;
-            } catch (InvalidTicketException _) {
+            } catch (InvalidTicketException ignored) {
             }
         }
         throw new InvalidTicketException("Ticket is invalid");

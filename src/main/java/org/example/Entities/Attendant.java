@@ -45,7 +45,7 @@ public class Attendant {
             try{
                 Car car = parkingLot.unpark(ticket);
                 return car;
-            } catch (InvalidTicketException _){
+            } catch (InvalidTicketException ignored){
             }
         }
         throw new InvalidTicketException("Ticket is invalid");
