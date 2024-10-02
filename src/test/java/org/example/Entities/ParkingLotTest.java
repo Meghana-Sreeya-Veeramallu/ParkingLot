@@ -200,4 +200,56 @@ class ParkingLotTest {
         assertThrows(CarNotFoundException.class, () -> parkingLot.getCarSlotNumberByRegistrationNumber(registrationNumber));
     }
 
+    // Tests for countAvailableSlots() method
+    @Test
+    public void testCountAvailableSlotsWhenParkingLotIsEmpty() {
+        ParkingLot parkingLot = new ParkingLot(5);
+        int expectedCount = 5;
+
+        int actualCount = parkingLot.countAvailableSlots();
+
+        assertEquals(expectedCount, actualCount);
+    }
+
+    @Test
+    public void testCountAvailableSlotsWhenSomeSlotsAreOccupied() {
+        ParkingLot parkingLot = new ParkingLot(5);
+        parkingLot.park(new Car("TS-1234", CarColor.RED));
+        parkingLot.park(new Car("TS-1235", CarColor.BLUE));
+        int expectedCount = 3;
+
+        int actualCount = parkingLot.countAvailableSlots();
+
+        assertEquals(expectedCount, actualCount);
+    }
+
+    @Test
+    public void testCountAvailableSlotsWhenParkingLotIsFull() {
+        ParkingLot parkingLot = new ParkingLot(5);
+        parkingLot.park(new Car("TS-1234", CarColor.RED));
+        parkingLot.park(new Car("TS-1235", CarColor.BLUE));
+        parkingLot.park(new Car("TS-1236", CarColor.GREEN));
+        parkingLot.park(new Car("TS-1237", CarColor.BLACK));
+        parkingLot.park(new Car("TS-1230", CarColor.WHITE));
+
+        int expectedCount = 0;
+
+        int actualCount = parkingLot.countAvailableSlots();
+
+        assertEquals(expectedCount, actualCount);
+    }
+
+    @Test
+    public void testCountAvailableSlotsAfterUnparkingACar() {
+        ParkingLot parkingLot = new ParkingLot(5);
+        Ticket ticket = parkingLot.park(new Car("TS-1234", CarColor.RED));
+        parkingLot.park(new Car("TS-1245", CarColor.BLUE));
+        parkingLot.unpark(ticket);
+
+        int expectedCount = 4;
+
+        int actualCount = parkingLot.countAvailableSlots();
+
+        assertEquals(expectedCount, actualCount);
+    }
 }

@@ -18,19 +18,22 @@ public class SmartAttendant extends Attendant {
         }
         checkifCarIsParked(car);
 
-        int numParkingLots = parkingLots.size();
+        ParkingLot selectedLot = null;
+        int maxCapacityLeft = -1;
 
-        for (int i = 0; i < numParkingLots; i++) {
-            int currentLotIndex = (lastUsedLotIndex + i + 1) % numParkingLots;
-            ParkingLot parkingLot = parkingLots.get(currentLotIndex);
-
-            try {
-                Ticket ticket = parkingLot.park(car);
-                lastUsedLotIndex = currentLotIndex;
-                return ticket;
-            } catch (ParkingLotFullException ignored) {
+        for (ParkingLot parkingLot : parkingLots) {
+            int availableSlots = parkingLot.countAvailableSlots();
+            if (availableSlots > maxCapacityLeft) {
+                maxCapacityLeft = availableSlots;
+                selectedLot = parkingLot;
             }
         }
-        throw new ParkingLotFullException("All parking lots are full");
+
+        if (selectedLot == null || selectedLot.isFull()) {
+            throw new ParkingLotFullException("All parking lots are full");
+        }
+
+        Ticket ticket = selectedLot.park(car);
+        return ticket;
     }
 }

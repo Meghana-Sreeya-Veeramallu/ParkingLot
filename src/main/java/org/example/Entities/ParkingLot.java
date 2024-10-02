@@ -112,4 +112,14 @@ public class ParkingLot {/**/
         }
         throw new CarNotFoundException("Car with given registration number is not found");
     }
+
+    public int countAvailableSlots() {
+        int count = 0;
+        for (Slot slot : slots) {
+            if (slot.isEmpty()) {
+                count++;
+            }
+        }
+        return count;
+    }
 }
