@@ -12,7 +12,7 @@ class OwnerTest {
     void testAssignAttendantToParkingLot() {
         Owner owner = new Owner();
         ParkingLot parkingLot = new ParkingLot(2);
-        Attendant attendant = new Attendant();
+        BasicAttendant attendant = new BasicAttendant();
         owner.assign(attendant, parkingLot);
         Car car = new Car("TS-1234", CarColor.BLACK);
         Ticket ticket = attendant.park(car);
@@ -25,7 +25,7 @@ class OwnerTest {
         Owner owner = new Owner();
         ParkingLot firstParkingLot = new ParkingLot(2);
         ParkingLot secondParkingLot = new ParkingLot(2);
-        Attendant attendant = new Attendant();
+        BasicAttendant attendant = new BasicAttendant();
         owner.assign(attendant, firstParkingLot);
         owner.assign(attendant, secondParkingLot);
         Car car = new Car("TS-1234", CarColor.BLACK);
@@ -38,8 +38,8 @@ class OwnerTest {
     void testAssignMultipleAttendantsToAParkingLot(){
         Owner owner = new Owner();
         ParkingLot parkingLot = new ParkingLot(10);
-        Attendant firstAttendant = new Attendant();
-        Attendant secondAttendant = new Attendant();
+        BasicAttendant firstAttendant = new BasicAttendant();
+        BasicAttendant secondAttendant = new BasicAttendant();
         owner.assign(firstAttendant, parkingLot);
         owner.assign(secondAttendant, parkingLot);
         Car firstCar = new Car("TS-1234", CarColor.BLACK);
@@ -66,8 +66,8 @@ class OwnerTest {
     void testAssignMultipleAttendantsToAParkingLotIncludingOwner(){
         Owner owner = new Owner();
         ParkingLot parkingLot = new ParkingLot(10);
-        Attendant firstAttendant = new Attendant();
-        Attendant secondAttendant = new Attendant();
+        BasicAttendant firstAttendant = new BasicAttendant();
+        BasicAttendant secondAttendant = new BasicAttendant();
         owner.assign(firstAttendant, parkingLot);
         owner.assign(secondAttendant, parkingLot);
         owner.assign(owner, parkingLot);
@@ -81,7 +81,7 @@ class OwnerTest {
     void testAssignSameAttendantToAParkingLotTwice(){
         Owner owner = new Owner();
         ParkingLot parkingLot = new ParkingLot(10);
-        Attendant attendant = new Attendant();
+        BasicAttendant attendant = new BasicAttendant();
         owner.assign(attendant, parkingLot);
 
         assertThrows(ParkingLotAlreadyAssigned.class, () -> owner.assign(attendant, parkingLot));

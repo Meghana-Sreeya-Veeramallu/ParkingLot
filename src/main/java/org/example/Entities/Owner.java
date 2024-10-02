@@ -1,6 +1,6 @@
 package org.example.Entities;
 
-public class Owner extends Attendant implements Notifiable{
+public class Owner extends BasicAttendant implements Notifiable{
 
     public Owner() {
         super();

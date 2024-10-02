@@ -7,11 +7,10 @@ import org.example.Exceptions.ParkingLotFullException;
 
 import java.util.ArrayList;
 
-public class SmartAttendant implements Attendant {
-
+public class BasicAttendant implements Attendant {
     protected ArrayList<ParkingLot> parkingLots;
 
-    public SmartAttendant(){
+    public BasicAttendant(){
         this.parkingLots = new ArrayList<>();
     }
 
@@ -28,29 +27,17 @@ public class SmartAttendant implements Attendant {
         }
     }
 
-    public Ticket park(Car car) {
-        if (parkingLots.isEmpty()) {
+    public Ticket park (Car car){
+        if (parkingLots.isEmpty()){
             throw new NoParkingLotAssigned("No parking lot is assigned");
         }
         checkIfCarIsParked(car);
-
-        ParkingLot selectedLot = null;
-        int maxCapacityLeft = -1;
-
-        for (ParkingLot parkingLot : parkingLots) {
-            int availableSlots = parkingLot.countAvailableSlots();
-            if (availableSlots > maxCapacityLeft) {
-                maxCapacityLeft = availableSlots;
-                selectedLot = parkingLot;
+        for(ParkingLot parkingLot : parkingLots){
+            if(!parkingLot.isFull()){
+                return parkingLot.park(car);
             }
         }
-
-        if (selectedLot == null || selectedLot.isFull()) {
-            throw new ParkingLotFullException("All parking lots are full");
-        }
-
-        Ticket ticket = selectedLot.park(car);
-        return ticket;
+        throw new ParkingLotFullException("All parking lots are full");
     }
 
     public Car unpark(Ticket ticket){

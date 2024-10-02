@@ -12,7 +12,7 @@ class PolicemanTest {
     void testNotifyWhenFullWhenParkingLotIsFull() {
         Policeman policeman = spy(new Policeman());
         ParkingLot parkingLot = new ParkingLot(1);
-        Attendant attendant = new Attendant();
+        BasicAttendant attendant = new BasicAttendant();
         attendant.assign(parkingLot);
         parkingLot.registerNotifiable(policeman);
         Car car = new Car("TS-1234", CarColor.BLACK);
@@ -26,7 +26,7 @@ class PolicemanTest {
     void testNotifyWhenFullWhenParkingLotIsNotFull() {
         Policeman policeman = spy(new Policeman());
         ParkingLot parkingLot = new ParkingLot(2);
-        Attendant attendant = new Attendant();
+        BasicAttendant attendant = new BasicAttendant();
         attendant.assign(parkingLot);
         parkingLot.registerNotifiable(policeman);
         Car car = new Car("TS-1234", CarColor.BLACK);
@@ -41,7 +41,7 @@ class PolicemanTest {
         Policeman policeman = spy(new Policeman());
         ParkingLot firstParkingLot = new ParkingLot(1);
         ParkingLot secondParkingLot = new ParkingLot(1);
-        Attendant attendant = new Attendant();
+        BasicAttendant attendant = new BasicAttendant();
         attendant.assign(firstParkingLot);
         attendant.assign(secondParkingLot);
         firstParkingLot.registerNotifiable(policeman);
@@ -62,7 +62,7 @@ class PolicemanTest {
         ParkingLot firstParkingLot = new ParkingLot(1);
         ParkingLot secondParkingLot = new ParkingLot(1);
         ParkingLot thirdParkingLot = new ParkingLot(2);
-        Attendant attendant = new Attendant();
+        BasicAttendant attendant = new BasicAttendant();
         attendant.assign(firstParkingLot);
         attendant.assign(secondParkingLot);
         firstParkingLot.registerNotifiable(policeman);
@@ -84,7 +84,7 @@ class PolicemanTest {
     void testNotifyWhenAvailableWhenParkingLotIsAvailable(){
         Policeman policeman = spy(new Policeman());
         ParkingLot parkingLot = new ParkingLot(1);
-        Attendant attendant = new Attendant();
+        BasicAttendant attendant = new BasicAttendant();
         attendant.assign(parkingLot);
         parkingLot.registerNotifiable(policeman);
         Car car = new Car("TS-1234", CarColor.BLACK);
@@ -99,7 +99,7 @@ class PolicemanTest {
     void testNotifyWhenAvailableWhenParkingLotIsNotAvailable(){
         Policeman policeman = spy(new Policeman());
         ParkingLot parkingLot = new ParkingLot(1);
-        Attendant attendant = new Attendant();
+        BasicAttendant attendant = new BasicAttendant();
         attendant.assign(parkingLot);
         parkingLot.registerNotifiable(policeman);
         Car car = new Car("TS-1234", CarColor.BLACK);
