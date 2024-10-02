@@ -1,8 +1,6 @@
 package org.example.Entities;
 
-import org.example.Exceptions.InvalidTicketException;
 import org.example.Exceptions.NoParkingLotAssigned;
-import org.example.Exceptions.ParkingLotAlreadyAssigned;
 import org.example.Exceptions.ParkingLotFullException;
 
 import java.util.ArrayList;
@@ -15,17 +13,14 @@ public class SmartAttendant implements Attendant {
         this.parkingLots = new ArrayList<>();
     }
 
-    public void assign(ParkingLot parkingLot){
-        if(this.parkingLots.contains(parkingLot)){
-            throw new ParkingLotAlreadyAssigned("Parking lot is already assigned");
-        }
-        this.parkingLots.add(parkingLot);
+    @Override
+    public void assign(ParkingLot parkingLot) {
+        assignLot(parkingLot, this.parkingLots);
     }
 
-    public void checkIfCarIsParked(Car car){
-        for(ParkingLot parkingLot : parkingLots){
-            parkingLot.checkIfCarIsParked(car);
-        }
+    @Override
+    public void checkIfCarIsParked(Car car) {
+        checkIfCarIsAlreadyParked(car, this.parkingLots);
     }
 
     public Ticket park(Car car) {
@@ -53,14 +48,8 @@ public class SmartAttendant implements Attendant {
         return ticket;
     }
 
-    public Car unpark(Ticket ticket){
-        for(ParkingLot parkingLot : parkingLots){
-            try{
-                Car car = parkingLot.unpark(ticket);
-                return car;
-            } catch (InvalidTicketException ignored){
-            }
-        }
-        throw new InvalidTicketException("Ticket is invalid");
+    @Override
+    public Car unpark(Ticket ticket) {
+        return unparkCar(ticket, this.parkingLots);
     }
 }

@@ -1,14 +1,45 @@
 package org.example.Entities;
 
 import org.example.Enums.CarColor;
+import org.example.Exceptions.InvalidTicketException;
+import org.example.Exceptions.ParkingLotAlreadyAssigned;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SmartAttendantTest {
+    // Test for assign() method
+    @Test
+    void testAssignParkingLot() {
+        SmartAttendant smartAttendant = new SmartAttendant();
+        ParkingLot parkingLot = new ParkingLot(5);
+
+        assertDoesNotThrow(() -> smartAttendant.assign(parkingLot));
+    }
+
+    @Test
+    void testAssignTwoParkingLots(){
+        SmartAttendant smartAttendant = new SmartAttendant();
+        ParkingLot firstParkingLot = new ParkingLot(5);
+        ParkingLot secondParkingLot = new ParkingLot(5);
+
+        assertDoesNotThrow(() -> smartAttendant.assign(firstParkingLot));
+        assertDoesNotThrow(() -> smartAttendant.assign(secondParkingLot));
+    }
+
+    @Test
+    void testAssignAParkingLotTwice(){
+        SmartAttendant smartAttendant = new SmartAttendant();
+        ParkingLot parkingLot = new ParkingLot(5);
+
+        assertDoesNotThrow(() -> smartAttendant.assign(parkingLot));
+        assertThrows(ParkingLotAlreadyAssigned.class, () -> smartAttendant.assign(parkingLot));
+    }
+
+    // Tests for park() method
     @Test
     void testParkWhenSecondParkingLotHasMoreAvailableSlots() {
-        Attendant smartAttendant = new SmartAttendant();
+        SmartAttendant smartAttendant = new SmartAttendant();
         ParkingLot firstParkingLot = new ParkingLot(1);
         ParkingLot secondParkingLot = new ParkingLot(2);
         smartAttendant.assign(firstParkingLot);
@@ -21,7 +52,7 @@ class SmartAttendantTest {
 
     @Test
     void testParkWhenBothHaveEqualCapacity() {
-        Attendant smartAttendant = new SmartAttendant();
+        SmartAttendant smartAttendant = new SmartAttendant();
         ParkingLot firstParkingLot = new ParkingLot(1);
         ParkingLot secondParkingLot = new ParkingLot(1);
         smartAttendant.assign(firstParkingLot);
@@ -35,7 +66,7 @@ class SmartAttendantTest {
 
     @Test
     void testParkWhenBothHaveEqualCapacityAfterACarIsParked() {
-        Attendant smartAttendant = new SmartAttendant();
+        SmartAttendant smartAttendant = new SmartAttendant();
         ParkingLot firstParkingLot = new ParkingLot(2);
         ParkingLot secondParkingLot = new ParkingLot(1);
         smartAttendant.assign(firstParkingLot);
@@ -47,5 +78,96 @@ class SmartAttendantTest {
 
         assertTrue(firstParkingLot.isFull());
         assertFalse(secondParkingLot.isFull());
+    }
+
+    // Tests for unpark() method
+    @Test
+    void testUnparkIfTicketIsValidForFirstCar() {
+        SmartAttendant smartAttendant = new SmartAttendant();
+        ParkingLot parkingLot = new ParkingLot(5);
+        smartAttendant.assign(parkingLot);
+        Car car = new Car("TS-1234", CarColor.RED);
+        Ticket ticket = smartAttendant.park(car);
+
+        assertDoesNotThrow(() -> smartAttendant.unpark(ticket));
+    }
+
+    @Test
+    void testUnparkIfTicketIsValidForSecondCar() {
+        SmartAttendant smartAttendant = new SmartAttendant();
+        ParkingLot parkingLot = new ParkingLot(5);
+        smartAttendant.assign(parkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        smartAttendant.park(firstCar);
+        Ticket ticket =  smartAttendant.park(secondCar);
+
+        Car unparkedCar = smartAttendant.unpark(ticket);
+
+        assertEquals(secondCar, unparkedCar);
+    }
+
+    @Test
+    void testUnparkIfTicketIsValidForSecondParkingLot() {
+        SmartAttendant smartAttendant = new SmartAttendant();
+        ParkingLot firstParkingLot = new ParkingLot(1);
+        ParkingLot secondParkingLot = new ParkingLot(5);
+        smartAttendant.assign(firstParkingLot);
+        smartAttendant.assign(secondParkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        smartAttendant.park(firstCar);
+        Ticket ticket =  smartAttendant.park(secondCar);
+
+        Car unparkedCar = smartAttendant.unpark(ticket);
+
+        assertEquals(secondCar, unparkedCar);
+    }
+
+    @Test
+    void testUnparkIfTicketIsInvalid() {
+        SmartAttendant smartAttendant = new SmartAttendant();
+        ParkingLot parkingLot = new ParkingLot(3);
+        smartAttendant.assign(parkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        smartAttendant.park(firstCar);
+        Ticket ticket =  smartAttendant.park(secondCar);
+        smartAttendant.unpark(ticket);
+
+        assertThrows(InvalidTicketException.class, () -> smartAttendant.unpark(ticket));
+    }
+
+    @Test
+    void testUnparkIfTicketIsInvalidForSecondParkingLot() {
+        SmartAttendant smartAttendant = new SmartAttendant();
+        ParkingLot firstParkingLot = new ParkingLot(1);
+        ParkingLot secondParkingLot = new ParkingLot(5);
+        smartAttendant.assign(firstParkingLot);
+        smartAttendant.assign(secondParkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        smartAttendant.park(firstCar);
+        Ticket ticket =  smartAttendant.park(secondCar);
+        smartAttendant.unpark(ticket);
+
+        assertThrows(InvalidTicketException.class, () -> smartAttendant.unpark(ticket));
+    }
+
+    @Test
+    void testUnparkIfACarUnpakedInFirstParkingLotAndACarIsTryingToPark(){
+        SmartAttendant smartAttendant = new SmartAttendant();
+        ParkingLot firstParkingLot = new ParkingLot(1);
+        ParkingLot secondParkingLot = new ParkingLot(1);
+        smartAttendant.assign(firstParkingLot);
+        smartAttendant.assign(secondParkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        Car thirdCar = new Car("TS-1236", CarColor.RED);
+        Ticket ticket = smartAttendant.park(firstCar);
+        smartAttendant.park(secondCar);
+        smartAttendant.unpark(ticket);
+
+        assertDoesNotThrow(() -> smartAttendant.park(thirdCar));
     }
 }

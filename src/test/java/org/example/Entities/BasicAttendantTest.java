@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BasicAttendantTest {
-    @Test
     // Test for assign() method
+    @Test
     void testAssignParkingLot() {
         BasicAttendant attendant = new BasicAttendant();
         ParkingLot parkingLot = new ParkingLot(5);
