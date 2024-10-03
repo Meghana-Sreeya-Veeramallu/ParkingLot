@@ -71,7 +71,7 @@ class OwnerTest {
     void testAssignOwnerToParkingLot() {
         Owner owner = new Owner();
         ParkingLot parkingLot = new ParkingLot(5, owner);
-        owner.assign(parkingLot);
+        owner.assign(owner, parkingLot);
         Car car = new Car("TS-1234", CarColor.BLACK);
         Ticket ticket = owner.park(car);
 
@@ -111,7 +111,9 @@ class OwnerTest {
         owner.assign(owner, parkingLot);
         Car car = new Car("TS-1234", CarColor.BLACK);
 
-        owner.park(car);
+        Ticket ticket = owner.park(car);
+        assertNotNull(ticket);
+        assertTrue(parkingLot.isFull());
 
         verify(owner, times(1)).notifyWhenFull(parkingLot);
     }

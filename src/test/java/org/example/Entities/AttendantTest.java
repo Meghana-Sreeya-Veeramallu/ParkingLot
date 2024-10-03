@@ -13,8 +13,7 @@ class AttendantTest {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
         ParkingLot parkingLot = new ParkingLot(5, owner);
-
-        assertDoesNotThrow(() -> attendant.assign(parkingLot));
+        assertDoesNotThrow(() -> owner.assign(attendant, parkingLot));
     }
 
     @Test
@@ -24,8 +23,8 @@ class AttendantTest {
         ParkingLot firstParkingLot = new ParkingLot(5, owner);
         ParkingLot secondParkingLot = new ParkingLot(5, owner);
 
-        assertDoesNotThrow(() -> attendant.assign(firstParkingLot));
-        assertDoesNotThrow(() -> attendant.assign(secondParkingLot));
+        assertDoesNotThrow(() -> owner.assign(attendant, firstParkingLot));
+        assertDoesNotThrow(() -> owner.assign(attendant, secondParkingLot));
     }
 
     @Test
@@ -34,8 +33,8 @@ class AttendantTest {
         Attendant attendant = new Attendant();
         ParkingLot parkingLot = new ParkingLot(5, owner);
 
-        assertDoesNotThrow(() -> attendant.assign(parkingLot));
-        assertThrows(ParkingLotAlreadyAssigned.class, () -> attendant.assign(parkingLot));
+        assertDoesNotThrow(() -> owner.assign(attendant, parkingLot));
+        assertThrows(ParkingLotAlreadyAssigned.class, () -> owner.assign(attendant, parkingLot));
     }
 
     // Test for park() method
@@ -53,7 +52,7 @@ class AttendantTest {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
         ParkingLot parkingLot = new ParkingLot(5, owner);
-        attendant.assign(parkingLot);
+        owner.assign(attendant, parkingLot);
         Car car = new Car("TS-1234", CarColor.RED);
 
         assertDoesNotThrow(() -> attendant.park(car));
@@ -64,7 +63,7 @@ class AttendantTest {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
         ParkingLot parkingLot = new ParkingLot(5, owner);
-        attendant.assign(parkingLot);
+        owner.assign(attendant, parkingLot);
         Car car = new Car("TS-1234", CarColor.RED);
 
         Ticket ticket = attendant.park(car);
@@ -78,8 +77,8 @@ class AttendantTest {
         Attendant attendant = new Attendant();
         ParkingLot firstParkingLot = new ParkingLot(1, owner);
         ParkingLot secondParkingLot = new ParkingLot(1, owner);
-        attendant.assign(firstParkingLot);
-        attendant.assign(secondParkingLot);
+        owner.assign(attendant, firstParkingLot);
+        owner.assign(attendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
 
@@ -93,8 +92,8 @@ class AttendantTest {
         Attendant attendant = new Attendant();
         ParkingLot firstParkingLot = new ParkingLot(1, owner);
         ParkingLot secondParkingLot = new ParkingLot(1, owner);
-        attendant.assign(firstParkingLot);
-        attendant.assign(secondParkingLot);
+        owner.assign(attendant, firstParkingLot);
+        owner.assign(attendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
         Car thirdCar = new Car("TS-1236", CarColor.RED);
@@ -109,7 +108,7 @@ class AttendantTest {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
         ParkingLot parkingLot = new ParkingLot(5, owner);
-        attendant.assign(parkingLot);
+        owner.assign(attendant, parkingLot);
         Car car = new Car("TS-1234", CarColor.RED);
         attendant.park(car);
 
@@ -122,8 +121,8 @@ class AttendantTest {
         Attendant attendant = new Attendant();
         ParkingLot firstParkingLot = new ParkingLot(1, owner);
         ParkingLot secondParkingLot = new ParkingLot(5, owner);
-        attendant.assign(firstParkingLot);
-        attendant.assign(secondParkingLot);
+        owner.assign(attendant, firstParkingLot);
+        owner.assign(attendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
         attendant.park(firstCar);
@@ -138,7 +137,7 @@ class AttendantTest {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
         ParkingLot parkingLot = new ParkingLot(5, owner);
-        attendant.assign(parkingLot);
+        owner.assign(attendant, parkingLot);
         Car car = new Car("TS-1234", CarColor.RED);
         Ticket ticket = attendant.park(car);
 
@@ -150,7 +149,7 @@ class AttendantTest {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
         ParkingLot parkingLot = new ParkingLot(5, owner);
-        attendant.assign(parkingLot);
+        owner.assign(attendant, parkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
         attendant.park(firstCar);
@@ -167,8 +166,8 @@ class AttendantTest {
         Attendant attendant = new Attendant();
         ParkingLot firstParkingLot = new ParkingLot(1, owner);
         ParkingLot secondParkingLot = new ParkingLot(5, owner);
-        attendant.assign(firstParkingLot);
-        attendant.assign(secondParkingLot);
+        owner.assign(attendant, firstParkingLot);
+        owner.assign(attendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
         attendant.park(firstCar);
@@ -184,7 +183,7 @@ class AttendantTest {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
         ParkingLot parkingLot = new ParkingLot(3, owner);
-        attendant.assign(parkingLot);
+        owner.assign(attendant, parkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
         attendant.park(firstCar);
@@ -200,8 +199,8 @@ class AttendantTest {
         Attendant attendant = new Attendant();
         ParkingLot firstParkingLot = new ParkingLot(1, owner);
         ParkingLot secondParkingLot = new ParkingLot(5, owner);
-        attendant.assign(firstParkingLot);
-        attendant.assign(secondParkingLot);
+        owner.assign(attendant, firstParkingLot);
+        owner.assign(attendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
         attendant.park(firstCar);
@@ -217,8 +216,8 @@ class AttendantTest {
         Attendant attendant = new Attendant();
         ParkingLot firstParkingLot = new ParkingLot(1, owner);
         ParkingLot secondParkingLot = new ParkingLot(1, owner);
-        attendant.assign(firstParkingLot);
-        attendant.assign(secondParkingLot);
+        owner.assign(attendant, firstParkingLot);
+        owner.assign(attendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
         Car thirdCar = new Car("TS-1236", CarColor.RED);

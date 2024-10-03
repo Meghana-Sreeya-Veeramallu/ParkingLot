@@ -2,7 +2,6 @@ package org.example.Entities;
 
 import org.example.Exceptions.InvalidTicketException;
 import org.example.Exceptions.NoParkingLotAssigned;
-import org.example.Exceptions.ParkingLotAlreadyAssigned;
 
 import java.util.ArrayList;
 
@@ -18,14 +17,6 @@ public class Attendant implements Attendable{
     public Attendant(){
         this.parkingLots = new ArrayList<>();
         this.nextLotStrategy = new BasicNextLotStrategy();
-    }
-
-    public void assign(ParkingLot parkingLot) {
-        if (parkingLots.contains(parkingLot)) {
-            throw new ParkingLotAlreadyAssigned("Parking lot is already assigned");
-        }
-        parkingLots.add(parkingLot);
-        System.out.println(parkingLots);
     }
 
     public void checkIfCarIsParked(Car car) {
