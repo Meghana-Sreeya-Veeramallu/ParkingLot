@@ -3,44 +3,50 @@ package org.example.Entities;
 import org.example.Exceptions.InvalidTicketException;
 import org.example.Exceptions.NoParkingLotAssigned;
 import org.example.Exceptions.ParkingLotAlreadyAssigned;
-import org.example.Exceptions.ParkingLotFullException;
 
 import java.util.ArrayList;
 
-public interface Attendant {
-    void assign(ParkingLot parkingLot);
-    void checkIfCarIsParked(Car car);
-    Ticket park(Car car);
-    Car unpark(Ticket ticket);
+public class Attendant implements Attendable{
+    private final NextLotStrategy nextLotStrategy;
+    protected ArrayList<ParkingLot> parkingLots;
 
-    default void assignLot(ParkingLot parkingLot, ArrayList<ParkingLot> parkingLots) {
+    public Attendant(NextLotStrategy strategy){
+        this.parkingLots = new ArrayList<>();
+        this.nextLotStrategy = strategy;
+    }
+
+    public Attendant(){
+        this.parkingLots = new ArrayList<>();
+        this.nextLotStrategy = new BasicNextLotStrategy();
+    }
+
+    public void assign(ParkingLot parkingLot) {
         if (parkingLots.contains(parkingLot)) {
             throw new ParkingLotAlreadyAssigned("Parking lot is already assigned");
         }
         parkingLots.add(parkingLot);
+        System.out.println(parkingLots);
     }
 
-    default void checkIfCarIsAlreadyParked(Car car, ArrayList<ParkingLot> parkingLots) {
+    public void checkIfCarIsParked(Car car) {
         for (ParkingLot parkingLot : parkingLots) {
             parkingLot.checkIfCarIsParked(car);
         }
     }
 
-    default Ticket parkCar(Car car, ArrayList<ParkingLot> parkingLots) {
+    public Ticket park(Car car) {
         if (parkingLots.isEmpty()) {
             throw new NoParkingLotAssigned("No parking lot is assigned");
         }
-        checkIfCarIsAlreadyParked(car, parkingLots);
+        checkIfCarIsParked(car);
 
-        for (ParkingLot parkingLot : parkingLots) {
-            if (!parkingLot.isFull()) {
-                return parkingLot.park(car);
-            }
-        }
-        throw new ParkingLotFullException("All parking lots are full");
+        ParkingLot selectedLot = nextLotStrategy.getNextLot(parkingLots);
+
+        Ticket ticket = selectedLot.park(car);
+        return ticket;
     }
 
-    default Car unparkCar(Ticket ticket, ArrayList<ParkingLot> parkingLots) {
+    public Car unpark(Ticket ticket) {
         for (ParkingLot parkingLot : parkingLots) {
             try {
                 Car car = parkingLot.unpark(ticket);
