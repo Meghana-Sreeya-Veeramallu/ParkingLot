@@ -1,5 +1,6 @@
 package org.example.Entities;
 
+import org.example.Exceptions.CannotAssignAttendantException;
 import org.example.Exceptions.ParkingLotAlreadyAssigned;
 
 public class Owner extends Attendant implements Notifiable{
@@ -9,6 +10,9 @@ public class Owner extends Attendant implements Notifiable{
     }
 
     public void assign(Attendant attendant, ParkingLot parkingLot) {
+        if (parkingLot.owner != this) {
+            throw new CannotAssignAttendantException("Only the owner of the parking lot can assign it.");
+        }
         if (attendant.parkingLots.contains(parkingLot)) {
             throw new ParkingLotAlreadyAssigned("Parking lot is already assigned");
         }

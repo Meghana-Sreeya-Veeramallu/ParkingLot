@@ -13,6 +13,7 @@ public class ParkingLot {/**/
     private final ArrayList<Slot> slots;
     private final ArrayList<Notifiable> notifiables = new ArrayList<>();
     protected final String parkingLotId;
+    protected final Owner owner;
 
     public ParkingLot(int capacity, Owner owner) {
         if (capacity <= 0) {
@@ -25,7 +26,8 @@ public class ParkingLot {/**/
         for (int i = 0; i < capacity; i++) {
             slots.add(new Slot());
         }
-        this.registerNotifiable(owner);
+        this.owner = owner;
+        this.registerNotifiable(this.owner);
         this.parkingLotId = UUID.randomUUID().toString();
     }
 

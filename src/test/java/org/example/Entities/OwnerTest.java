@@ -1,6 +1,7 @@
 package org.example.Entities;
 
 import org.example.Enums.CarColor;
+import org.example.Exceptions.CannotAssignAttendantException;
 import org.example.Exceptions.CannotCreateAParkingLotException;
 import org.example.Exceptions.ParkingLotAlreadyAssigned;
 import org.junit.jupiter.api.Test;
@@ -101,6 +102,25 @@ class OwnerTest {
         owner.assign(attendant, parkingLot);
 
         assertThrows(ParkingLotAlreadyAssigned.class, () -> owner.assign(attendant, parkingLot));
+    }
+
+    @Test
+    void testAssignAttendantToParkingLotWithDifferentOwner() {
+        Owner firstOwner = new Owner();
+        Owner secondOwner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(2, firstOwner);
+        Attendant attendant = new Attendant();
+
+        assertThrows(CannotAssignAttendantException.class, () -> secondOwner.assign(attendant, parkingLot));
+    }
+
+    @Test
+    void testAssignOwnerToParkingLotWithDifferentOwner() {
+        Owner firstOwner = new Owner();
+        Owner secondOwner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(5, firstOwner);
+
+        assertThrows(CannotAssignAttendantException.class, () -> secondOwner.assign(secondOwner, parkingLot));
     }
 
     // Tests for notifyWhenNull() method
