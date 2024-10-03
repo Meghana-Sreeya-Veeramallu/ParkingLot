@@ -105,9 +105,9 @@ class OwnerTest {
 
     // Tests for notifyWhenNull() method
     @Test
-    void testNotifyWhenFullWhenParkingLotIsFull() {
+    void testNotifyWhenFullParkingLotIsFull() {
         Owner owner = spy(new Owner());
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        ParkingLot parkingLot = spy(new ParkingLot(1, owner));
         owner.assign(owner, parkingLot);
         Car car = new Car("TS-1234", CarColor.BLACK);
 
@@ -115,11 +115,11 @@ class OwnerTest {
         assertNotNull(ticket);
         assertTrue(parkingLot.isFull());
 
-        verify(owner, times(1)).notifyWhenFull(parkingLot);
+        verify(owner, times(1)).notifyFull(parkingLot.parkingLotId);
     }
 
     @Test
-    void testNotifyWhenFullWhenParkingLotIsNotFull() {
+    void testNotifyWhenFullParkingLotIsNotFull() {
         Owner owner = spy(new Owner());
         ParkingLot parkingLot = new ParkingLot(2, owner);
         owner.assign(owner, parkingLot);
@@ -127,11 +127,11 @@ class OwnerTest {
 
         owner.park(car);
 
-        verify(owner, times(0)).notifyWhenFull(parkingLot);
+        verify(owner, times(0)).notifyFull(parkingLot.parkingLotId);
     }
 
     @Test
-    void testNotifyWhenFullWhenMultipleParkingLotsAreFull() {
+    void testNotifyWhenFullMultipleParkingLotsAreFull() {
         Owner owner = spy(new Owner());
         ParkingLot firstParkingLot = new ParkingLot(1, owner);
         ParkingLot secondParkingLot = new ParkingLot(2, owner);
@@ -145,13 +145,13 @@ class OwnerTest {
         owner.park(secondCar);
         owner.park(thirdCar);
 
-        verify(owner, times(1)).notifyWhenFull(firstParkingLot);
-        verify(owner, times(1)).notifyWhenFull(secondParkingLot);
+        verify(owner, times(1)).notifyFull(firstParkingLot.parkingLotId);
+        verify(owner, times(1)).notifyFull(secondParkingLot.parkingLotId);
     }
 
     // Tests for notifyWhenAvailable() method
     @Test
-    void testNotifyWhenAvailableWhenParkingLotIsAvailable() {
+    void testNotifyWhenAvailableParkingLotIsAvailable() {
         Owner owner = spy(new Owner());
         ParkingLot parkingLot = new ParkingLot(1, owner);
         owner.assign(owner, parkingLot);
@@ -160,11 +160,11 @@ class OwnerTest {
         Ticket ticket = owner.park(car);
         owner.unpark(ticket);
 
-        verify(owner, times(1)).notifyWhenAvailable(parkingLot);
+        verify(owner, times(1)).notifyAvailable(parkingLot.parkingLotId);
     }
 
     @Test
-    void testNotifyWhenAvailableWhenParkingLotIsNotAvailable() {
+    void testNotifyWhenAvailableParkingLotIsNotAvailable() {
         Owner owner = spy(new Owner());
         ParkingLot parkingLot = new ParkingLot(3, owner);
         owner.assign(owner, parkingLot);
@@ -175,11 +175,11 @@ class OwnerTest {
         owner.park(secondCar);
         owner.unpark(ticket);
 
-        verify(owner, times(0)).notifyWhenAvailable(parkingLot);
+        verify(owner, times(0)).notifyAvailable(parkingLot.parkingLotId);
     }
 
     @Test
-    void testNotifyWhenAvailableWhenSecondParkingLotIsAvailable() {
+    void testNotifyWhenAvailableSecondParkingLotIsAvailable() {
         Owner owner = spy(new Owner());
         ParkingLot firstParkingLot = new ParkingLot(2, owner);
         ParkingLot secondParkingLot = new ParkingLot(1, owner);
@@ -194,6 +194,6 @@ class OwnerTest {
         Ticket ticket = owner.park(thirdCar);
         owner.unpark(ticket);
 
-        verify(owner, times(1)).notifyWhenAvailable(secondParkingLot);
+        verify(owner, times(1)).notifyAvailable(secondParkingLot.parkingLotId);
     }
 }

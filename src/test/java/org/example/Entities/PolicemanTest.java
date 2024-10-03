@@ -9,7 +9,7 @@ class PolicemanTest {
 
     // Tests for notifyWhenNull() method
     @Test
-    void testNotifyWhenFullWhenParkingLotIsFull() {
+    void testNotifyWhenFullParkingLotIsFull() {
         Owner owner = new Owner();
         Policeman policeman = spy(new Policeman());
         ParkingLot parkingLot = new ParkingLot(1, owner);
@@ -20,11 +20,11 @@ class PolicemanTest {
 
         attendant.park(car);
 
-        verify(policeman, times(1)).notifyWhenFull(parkingLot);
+        verify(policeman, times(1)).notifyFull(parkingLot.parkingLotId);
     }
 
     @Test
-    void testNotifyWhenFullWhenParkingLotIsNotFull() {
+    void testNotifyWhenFullParkingLotIsNotFull() {
         Owner owner = new Owner();
         Policeman policeman = spy(new Policeman());
         ParkingLot parkingLot = new ParkingLot(2, owner);
@@ -35,11 +35,11 @@ class PolicemanTest {
 
         attendant.park(car);
 
-        verify(policeman, times(0)).notifyWhenFull(parkingLot);
+        verify(policeman, times(0)).notifyFull(parkingLot.parkingLotId);
     }
 
     @Test
-    void testNotifyWhenFullWhenAllParkingLotsAreFull() {
+    void testNotifyWhenFullAllParkingLotsAreFull() {
         Owner owner = new Owner();
         Policeman policeman = spy(new Policeman());
         ParkingLot firstParkingLot = new ParkingLot(1, owner);
@@ -55,12 +55,12 @@ class PolicemanTest {
         attendant.park(firstCar);
         attendant.park(secondCar);
 
-        verify(policeman, times(1)).notifyWhenFull(firstParkingLot);
-        verify(policeman, times(1)).notifyWhenFull(secondParkingLot);
+        verify(policeman, times(1)).notifyFull(firstParkingLot.parkingLotId);
+        verify(policeman, times(1)).notifyFull(secondParkingLot.parkingLotId);
     }
 
     @Test
-    void testNotifyWhenFullWhenSomeParkingLotsAreFull() {
+    void testNotifyWhenFullSomeParkingLotsAreFull() {
         Owner owner = new Owner();
         Policeman policeman = spy(new Policeman());
         ParkingLot firstParkingLot = new ParkingLot(1, owner);
@@ -78,14 +78,14 @@ class PolicemanTest {
         attendant.park(firstCar);
         attendant.park(secondCar);
 
-        verify(policeman, times(1)).notifyWhenFull(firstParkingLot);
-        verify(policeman, times(1)).notifyWhenFull(secondParkingLot);
-        verify(policeman, times(0)).notifyWhenFull(thirdParkingLot);
+        verify(policeman, times(1)).notifyFull(firstParkingLot.parkingLotId);
+        verify(policeman, times(1)).notifyFull(secondParkingLot.parkingLotId);
+        verify(policeman, times(0)).notifyFull(thirdParkingLot.parkingLotId);
     }
 
     // Tests for notifyWhenAvailable() method
     @Test
-    void testNotifyWhenAvailableWhenParkingLotIsAvailable(){
+    void testNotifyWhenAvailableParkingLotIsAvailable(){
         Owner owner = new Owner();
         Policeman policeman = spy(new Policeman());
         ParkingLot parkingLot = new ParkingLot(1, owner);
@@ -97,11 +97,11 @@ class PolicemanTest {
         Ticket ticket = attendant.park(car);
         attendant.unpark(ticket);
 
-        verify(policeman, times(1)).notifyWhenAvailable(parkingLot);
+        verify(policeman, times(1)).notifyAvailable(parkingLot.parkingLotId);
     }
 
     @Test
-    void testNotifyWhenAvailableWhenParkingLotIsNotAvailable(){
+    void testNotifyWhenAvailableParkingLotIsNotAvailable(){
         Owner owner = new Owner();
         Policeman policeman = spy(new Policeman());
         ParkingLot parkingLot = new ParkingLot(1, owner);
@@ -112,11 +112,11 @@ class PolicemanTest {
 
         attendant.park(car);
 
-        verify(policeman, times(0)).notifyWhenAvailable(parkingLot);
+        verify(policeman, times(0)).notifyAvailable(parkingLot.parkingLotId);
     }
 
     @Test
-    void testNotifyWhenAvailableWhenSecondParkingLotIsAvailable(){
+    void testNotifyWhenAvailableSecondParkingLotIsAvailable(){
         Owner owner = spy(new Owner());
         ParkingLot firstParkingLot = new ParkingLot(2, owner);
         ParkingLot secondParkingLot = new ParkingLot(1, owner);
@@ -131,6 +131,6 @@ class PolicemanTest {
         Ticket ticket = owner.park(thirdCar);
         owner.unpark(ticket);
 
-        verify(owner, times(1)).notifyWhenAvailable(secondParkingLot);
+        verify(owner, times(1)).notifyAvailable(secondParkingLot.parkingLotId);
     }
 }

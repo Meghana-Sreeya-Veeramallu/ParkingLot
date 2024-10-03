@@ -7,10 +7,12 @@ import org.example.Exceptions.InvalidTicketException;
 import org.example.Exceptions.ParkingLotFullException;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ParkingLot {/**/
     private final ArrayList<Slot> slots;
     private final ArrayList<Notifiable> notifiables = new ArrayList<>();
+    protected final String parkingLotId;
 
     public ParkingLot(int capacity, Owner owner) {
         if (capacity <= 0) {
@@ -24,6 +26,7 @@ public class ParkingLot {/**/
             slots.add(new Slot());
         }
         this.registerNotifiable(owner);
+        this.parkingLotId = UUID.randomUUID().toString();
     }
 
     public boolean isFull(){
@@ -48,15 +51,15 @@ public class ParkingLot {/**/
         }
     }
 
-    private void notifyWhenFull() {
+    private void notifyFull() {
         for (Notifiable notifiable : notifiables) {
-            notifiable.notifyWhenFull(this);
+            notifiable.notifyFull(this.parkingLotId);
         }
     }
 
-    private void notifyWhenAvailable() {
+    private void notifyAvailable() {
         for (Notifiable notifiable : notifiables) {
-            notifiable.notifyWhenAvailable(this);
+            notifiable.notifyAvailable(this.parkingLotId);
         }
     }
 
@@ -68,7 +71,7 @@ public class ParkingLot {/**/
         Slot slot = getNearestSlot();
         Ticket ticket = slot.park(car);
         if (isFull()) {
-            notifyWhenFull();
+            notifyFull();
         }
         return ticket;
     }
@@ -79,7 +82,7 @@ public class ParkingLot {/**/
             try {
                 Car car = slot.unpark(ticket);
                 if (wasFull) {
-                    notifyWhenAvailable();
+                    notifyAvailable();
                 }
                 return car;
             } catch (InvalidTicketException ignored) {

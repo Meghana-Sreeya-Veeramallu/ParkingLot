@@ -15,11 +15,11 @@ public class Owner extends Attendant implements Notifiable{
         attendant.parkingLots.add(parkingLot);
     }
 
-    public void notifyWhenFull(ParkingLot parkingLot) {
-        System.out.println("Notifying to owner: Parking lot " + parkingLot + " is full");
+    public void notifyFull(String parkingLotId) {
+        System.out.println("Notifying to owner: Parking lot " + parkingLotId + " is full");
     }
 
-    public void notifyWhenAvailable(ParkingLot parkingLot) {
-        System.out.println("Notifying to owner: Parking lot " + parkingLot + " is available");
+    public void notifyAvailable(String parkingLotId) {
+        System.out.println("Notifying to owner: Parking lot " + parkingLotId + " is available");
     }
 }
