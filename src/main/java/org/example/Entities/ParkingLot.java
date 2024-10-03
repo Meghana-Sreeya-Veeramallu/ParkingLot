@@ -11,15 +11,20 @@ import java.util.ArrayList;
 public class ParkingLot {/**/
     private final ArrayList<Slot> slots;
     private final ArrayList<Notifiable> notifiables = new ArrayList<>();
+    private final Owner owner;
 
-    public ParkingLot(int capacity) {
+    public ParkingLot(int capacity, Owner owner) {
         if (capacity <= 0) {
             throw new CannotCreateAParkingLotException("Capacity should be greater than 0");
+        }
+        if (owner == null) {
+            throw new CannotCreateAParkingLotException("Owner cannot be null");
         }
         this.slots = new ArrayList<>(capacity);
         for (int i = 0; i < capacity; i++) {
             slots.add(new Slot());
         }
+        this.owner = owner;
     }
 
     public boolean isFull(){

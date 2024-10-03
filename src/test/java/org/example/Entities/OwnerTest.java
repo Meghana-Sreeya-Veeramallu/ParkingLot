@@ -1,6 +1,7 @@
 package org.example.Entities;
 
 import org.example.Enums.CarColor;
+import org.example.Exceptions.CannotCreateAParkingLotException;
 import org.example.Exceptions.ParkingLotAlreadyAssigned;
 import org.junit.jupiter.api.Test;
 
@@ -9,9 +10,24 @@ import static org.mockito.Mockito.*;
 
 class OwnerTest {
     @Test
+    void testParkingLotCreationWithoutOwner() {
+        assertThrows(CannotCreateAParkingLotException.class, () -> {
+            new ParkingLot(5, null);
+        });
+    }
+
+    @Test
+    void testParkingLotCreationWithOwner() {
+        Owner owner = new Owner();
+        assertDoesNotThrow(() -> {
+            new ParkingLot(5, owner);
+        });
+    }
+
+    @Test
     void testAssignAttendantToParkingLot() {
         Owner owner = new Owner();
-        ParkingLot parkingLot = new ParkingLot(2);
+        ParkingLot parkingLot = new ParkingLot(2, owner);
         Attendant attendant = new Attendant();
         owner.assign(attendant, parkingLot);
         Car car = new Car("TS-1234", CarColor.BLACK);
@@ -23,8 +39,8 @@ class OwnerTest {
     @Test
     void testAssignAttendantToMultipleParkingLots() {
         Owner owner = new Owner();
-        ParkingLot firstParkingLot = new ParkingLot(2);
-        ParkingLot secondParkingLot = new ParkingLot(2);
+        ParkingLot firstParkingLot = new ParkingLot(2, owner);
+        ParkingLot secondParkingLot = new ParkingLot(2, owner);
         Attendant attendant = new Attendant();
         owner.assign(attendant, firstParkingLot);
         owner.assign(attendant, secondParkingLot);
@@ -35,9 +51,9 @@ class OwnerTest {
     }
 
     @Test
-    void testAssignMultipleAttendantsToAParkingLot(){
+    void testAssignMultipleAttendantsToAParkingLot() {
         Owner owner = new Owner();
-        ParkingLot parkingLot = new ParkingLot(10);
+        ParkingLot parkingLot = new ParkingLot(10, owner);
         Attendant firstAttendant = new Attendant();
         Attendant secondAttendant = new Attendant();
         owner.assign(firstAttendant, parkingLot);
@@ -54,7 +70,7 @@ class OwnerTest {
     @Test
     void testAssignOwnerToParkingLot() {
         Owner owner = new Owner();
-        ParkingLot parkingLot = new ParkingLot(5);
+        ParkingLot parkingLot = new ParkingLot(5, owner);
         owner.assign(parkingLot);
         Car car = new Car("TS-1234", CarColor.BLACK);
         Ticket ticket = owner.park(car);
@@ -63,9 +79,9 @@ class OwnerTest {
     }
 
     @Test
-    void testAssignMultipleAttendantsToAParkingLotIncludingOwner(){
+    void testAssignMultipleAttendantsToAParkingLotIncludingOwner() {
         Owner owner = new Owner();
-        ParkingLot parkingLot = new ParkingLot(10);
+        ParkingLot parkingLot = new ParkingLot(10, owner);
         Attendant firstAttendant = new Attendant();
         Attendant secondAttendant = new Attendant();
         owner.assign(firstAttendant, parkingLot);
@@ -78,9 +94,9 @@ class OwnerTest {
     }
 
     @Test
-    void testAssignSameAttendantToAParkingLotTwice(){
+    void testAssignSameAttendantToAParkingLotTwice() {
         Owner owner = new Owner();
-        ParkingLot parkingLot = new ParkingLot(10);
+        ParkingLot parkingLot = new ParkingLot(10, owner);
         Attendant attendant = new Attendant();
         owner.assign(attendant, parkingLot);
 
@@ -89,9 +105,9 @@ class OwnerTest {
 
     // Tests for notifyWhenNull() method
     @Test
-    void testNotifyWhenFullWhenParkingLotIsFull(){
+    void testNotifyWhenFullWhenParkingLotIsFull() {
         Owner owner = spy(new Owner());
-        ParkingLot parkingLot = new ParkingLot(1);
+        ParkingLot parkingLot = new ParkingLot(1, owner);
         owner.assign(owner, parkingLot);
         Car car = new Car("TS-1234", CarColor.BLACK);
 
@@ -101,9 +117,9 @@ class OwnerTest {
     }
 
     @Test
-    void testNotifyWhenFullWhenParkingLotIsNotFull(){
+    void testNotifyWhenFullWhenParkingLotIsNotFull() {
         Owner owner = spy(new Owner());
-        ParkingLot parkingLot = new ParkingLot(2);
+        ParkingLot parkingLot = new ParkingLot(2, owner);
         owner.assign(owner, parkingLot);
         Car car = new Car("TS-1234", CarColor.BLACK);
 
@@ -113,10 +129,10 @@ class OwnerTest {
     }
 
     @Test
-    void testNotifyWhenFullWhenMultipleParkingLotsAreFull(){
+    void testNotifyWhenFullWhenMultipleParkingLotsAreFull() {
         Owner owner = spy(new Owner());
-        ParkingLot firstParkingLot = new ParkingLot(1);
-        ParkingLot secondParkingLot = new ParkingLot(2);
+        ParkingLot firstParkingLot = new ParkingLot(1, owner);
+        ParkingLot secondParkingLot = new ParkingLot(2, owner);
         owner.assign(owner, firstParkingLot);
         owner.assign(owner, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.BLACK);
@@ -133,9 +149,9 @@ class OwnerTest {
 
     // Tests for notifyWhenAvailable() method
     @Test
-    void testNotifyWhenAvailableWhenParkingLotIsAvailable(){
+    void testNotifyWhenAvailableWhenParkingLotIsAvailable() {
         Owner owner = spy(new Owner());
-        ParkingLot parkingLot = new ParkingLot(1);
+        ParkingLot parkingLot = new ParkingLot(1, owner);
         owner.assign(owner, parkingLot);
         Car car = new Car("TS-1234", CarColor.BLACK);
 
@@ -146,9 +162,9 @@ class OwnerTest {
     }
 
     @Test
-    void testNotifyWhenAvailableWhenParkingLotIsNotAvailable(){
+    void testNotifyWhenAvailableWhenParkingLotIsNotAvailable() {
         Owner owner = spy(new Owner());
-        ParkingLot parkingLot = new ParkingLot(3);
+        ParkingLot parkingLot = new ParkingLot(3, owner);
         owner.assign(owner, parkingLot);
         Car firstCar = new Car("TS-1234", CarColor.BLACK);
         Car secondCar = new Car("TS-1235", CarColor.BLACK);
@@ -161,10 +177,10 @@ class OwnerTest {
     }
 
     @Test
-    void testNotifyWhenAvailableWhenSecondParkingLotIsAvailable(){
+    void testNotifyWhenAvailableWhenSecondParkingLotIsAvailable() {
         Owner owner = spy(new Owner());
-        ParkingLot firstParkingLot = new ParkingLot(2);
-        ParkingLot secondParkingLot = new ParkingLot(1);
+        ParkingLot firstParkingLot = new ParkingLot(2, owner);
+        ParkingLot secondParkingLot = new ParkingLot(1, owner);
         owner.assign(owner, firstParkingLot);
         owner.assign(owner, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.BLACK);

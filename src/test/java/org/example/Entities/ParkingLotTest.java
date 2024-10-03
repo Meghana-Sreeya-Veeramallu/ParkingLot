@@ -1,10 +1,7 @@
 package org.example.Entities;
 
 import org.example.Enums.CarColor;
-import org.example.Exceptions.CarAlreadyParkedException;
-import org.example.Exceptions.CarNotFoundException;
-import org.example.Exceptions.InvalidTicketException;
-import org.example.Exceptions.ParkingLotFullException;
+import org.example.Exceptions.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,21 +11,29 @@ class ParkingLotTest {
 
     // Tests for ParkingLot class
     @Test
-    public void testExceptionForParkingLotWithCapacity0() {
-        assertThrows(Exception.class, () -> {new ParkingLot(0);});
+    void testExceptionForParkingLotWithCapacity0() {
+        Owner owner = new Owner();
+        assertThrows(CannotCreateAParkingLotException.class, () -> {new ParkingLot(0, owner);});
+    }
+    
+    @Test
+    void testExceptionForParkingLotWithOwnerAsNull() {
+        assertThrows(CannotCreateAParkingLotException.class, () -> {new ParkingLot(5, null);});
     }
 
     @Test
-    public void testParkingLotWith5Slots() throws Exception {
-        ParkingLot parkingLot = new ParkingLot(5);
+    void testParkingLotWith5Slots() throws Exception {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(5, owner);
 
         assertNotNull(parkingLot);
     }
 
     // Tests for park() method
     @Test
-    public void testParkCarWhenParkingLotIsEmpty() {
-        ParkingLot parkingLot = new ParkingLot(2);
+    void testParkCarWhenParkingLotIsEmpty() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(2, owner);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Ticket ticket = parkingLot.park(firstCar);
 
@@ -36,8 +41,9 @@ class ParkingLotTest {
     }
 
     @Test
-    public void testParkCarWhenParkingLotIsNotEmpty() {
-        ParkingLot parkingLot = new ParkingLot(2);
+    void testParkCarWhenParkingLotIsNotEmpty() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(2, owner);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
         parkingLot.park(firstCar);
@@ -46,8 +52,9 @@ class ParkingLotTest {
     }
 
     @Test
-    public void testParkingWhenParkingLotIsFull() {
-        ParkingLot parkingLot = new ParkingLot(1);
+    void testParkingWhenParkingLotIsFull() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(1, owner);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
 
@@ -57,8 +64,9 @@ class ParkingLotTest {
     }
 
     @Test
-    public void testParkCarWhenCarIsAlreadyParked() {
-        ParkingLot parkingLot = new ParkingLot(2);
+    void testParkCarWhenCarIsAlreadyParked() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(2, owner);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1234", CarColor.RED);
         parkingLot.park(firstCar);
@@ -68,8 +76,9 @@ class ParkingLotTest {
 
     // Tests for unpark() method
     @Test
-    public void testUnparkCarWithValidTicket() {
-        ParkingLot parkingLot = new ParkingLot(2);
+    void testUnparkCarWithValidTicket() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(2, owner);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Ticket ticket = parkingLot.park(firstCar);
 
@@ -77,8 +86,9 @@ class ParkingLotTest {
     }
 
     @Test
-    public void testUnparkCarShouldReturnTheParkedCar() {
-        ParkingLot parkingLot = new ParkingLot(2);
+    void testUnparkCarShouldReturnTheParkedCar() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(2, owner);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Ticket ticket = parkingLot.park(firstCar);
 
@@ -88,8 +98,9 @@ class ParkingLotTest {
     }
 
     @Test
-    public void testUnparkCarWithInvalidTicket() {
-        ParkingLot parkingLot = new ParkingLot(2);
+    void testUnparkCarWithInvalidTicket() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(2, owner);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         parkingLot.park(firstCar);
 
@@ -100,8 +111,9 @@ class ParkingLotTest {
 
     // Tests for countCarsByColor() method
     @Test
-    public void testCountCarsByColorWhenNoCarIsParked() {
-        ParkingLot parkingLot = new ParkingLot(5);
+    void testCountCarsByColorWhenNoCarIsParked() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(5, owner);
         int expectedCount = 0;
 
         int actualCount = parkingLot.countCarsByColor(CarColor.RED);
@@ -110,8 +122,9 @@ class ParkingLotTest {
     }
 
     @Test
-    public void testCountCarsByColorWhenCarsAreParked() {
-        ParkingLot parkingLot = new ParkingLot(5);
+    void testCountCarsByColorWhenCarsAreParked() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(5, owner);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
         Car thirdCar = new Car("TS-1236", CarColor.RED);
@@ -126,8 +139,9 @@ class ParkingLotTest {
     }
 
     @Test
-    public void testCountCarsByColorWhenCarsAreParkedBySpyingOnParkingLot() {
-        ParkingLot parkingLot = spy(new ParkingLot(5));
+    void testCountCarsByColorWhenCarsAreParkedBySpyingOnParkingLot() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = spy(new ParkingLot(5, owner));
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
         Car thirdCar = new Car("TS-1236", CarColor.RED);
@@ -142,16 +156,18 @@ class ParkingLotTest {
 
     // Tests for getSlotNumberByRegistrationNumber() method
     @Test
-    public void testGetCarSlotNumberByRegistrationNumberWhenParkingLotIsEmpty() {
-        ParkingLot parkingLot = new ParkingLot(5);
+    void testGetCarSlotNumberByRegistrationNumberWhenParkingLotIsEmpty() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(5, owner);
         String registrationNumber = "TS-1234";
 
         assertThrows(CarNotFoundException.class, () -> parkingLot.getCarSlotNumberByRegistrationNumber(registrationNumber));
     }
 
     @Test
-    public void testGetCarSlotNumberByRegistrationNumberWhenCarIsParked() {
-        ParkingLot parkingLot = new ParkingLot(5);
+    void testGetCarSlotNumberByRegistrationNumberWhenCarIsParked() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(5, owner);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         parkingLot.park(firstCar);
         String registrationNumber = "TS-1234";
@@ -163,8 +179,9 @@ class ParkingLotTest {
     }
 
     @Test
-    public void testGetCarSlotNumberByRegistrationNumberWhenCarIsParkedSecond() {
-        ParkingLot parkingLot = new ParkingLot(5);
+    void testGetCarSlotNumberByRegistrationNumberWhenCarIsParkedSecond() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(5, owner);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
         parkingLot.park(firstCar);
@@ -178,8 +195,9 @@ class ParkingLotTest {
     }
 
     @Test
-    public void testGetCarSlotNumberByRegistrationNumberWhenCarIsNotPresent() {
-        ParkingLot parkingLot = new ParkingLot(2);
+    void testGetCarSlotNumberByRegistrationNumberWhenCarIsNotPresent() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(2, owner);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
         parkingLot.park(firstCar);
@@ -190,8 +208,9 @@ class ParkingLotTest {
     }
 
     @Test
-    public void testGetCarSlotNumberByRegistrationNumberWhenCarIsParkedByAndUnparked(){
-        ParkingLot parkingLot = new ParkingLot(5);
+    void testGetCarSlotNumberByRegistrationNumberWhenCarIsParkedByAndUnparked(){
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(5, owner);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Ticket ticket = parkingLot.park(firstCar);
         parkingLot.unpark(ticket);
@@ -202,8 +221,9 @@ class ParkingLotTest {
 
     // Tests for countAvailableSlots() method
     @Test
-    public void testCountAvailableSlotsWhenParkingLotIsEmpty() {
-        ParkingLot parkingLot = new ParkingLot(5);
+    void testCountAvailableSlotsWhenParkingLotIsEmpty() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(5, owner);
         int expectedCount = 5;
 
         int actualCount = parkingLot.countAvailableSlots();
@@ -212,8 +232,9 @@ class ParkingLotTest {
     }
 
     @Test
-    public void testCountAvailableSlotsWhenSomeSlotsAreOccupied() {
-        ParkingLot parkingLot = new ParkingLot(5);
+    void testCountAvailableSlotsWhenSomeSlotsAreOccupied() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(5, owner);
         parkingLot.park(new Car("TS-1234", CarColor.RED));
         parkingLot.park(new Car("TS-1235", CarColor.BLUE));
         int expectedCount = 3;
@@ -224,8 +245,9 @@ class ParkingLotTest {
     }
 
     @Test
-    public void testCountAvailableSlotsWhenParkingLotIsFull() {
-        ParkingLot parkingLot = new ParkingLot(5);
+    void testCountAvailableSlotsWhenParkingLotIsFull() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(5, owner);
         parkingLot.park(new Car("TS-1234", CarColor.RED));
         parkingLot.park(new Car("TS-1235", CarColor.BLUE));
         parkingLot.park(new Car("TS-1236", CarColor.GREEN));
@@ -240,8 +262,9 @@ class ParkingLotTest {
     }
 
     @Test
-    public void testCountAvailableSlotsAfterUnparkingACar() {
-        ParkingLot parkingLot = new ParkingLot(5);
+    void testCountAvailableSlotsAfterUnparkingACar() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(5, owner);
         Ticket ticket = parkingLot.park(new Car("TS-1234", CarColor.RED));
         parkingLot.park(new Car("TS-1245", CarColor.BLUE));
         parkingLot.unpark(ticket);
