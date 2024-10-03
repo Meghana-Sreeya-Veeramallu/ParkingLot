@@ -7,12 +7,11 @@ import org.example.Exceptions.InvalidTicketException;
 import org.example.Exceptions.ParkingLotFullException;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class ParkingLot {/**/
     private final ArrayList<Slot> slots;
     private final ArrayList<Notifiable> notifiables = new ArrayList<>();
-    protected final String parkingLotId;
+    private final int parkingLotId;
     protected final Owner owner;
 
     public ParkingLot(int capacity, Owner owner) {
@@ -28,7 +27,7 @@ public class ParkingLot {/**/
         }
         this.owner = owner;
         this.registerNotifiable(this.owner);
-        this.parkingLotId = UUID.randomUUID().toString();
+        this.parkingLotId = hashCode();
     }
 
     public boolean isFull(){
@@ -130,5 +129,9 @@ public class ParkingLot {/**/
             }
         }
         return count;
+    }
+
+    public int getParkingLotId(){
+        return parkingLotId;
     }
 }

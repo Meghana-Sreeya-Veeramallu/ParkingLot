@@ -135,7 +135,7 @@ class OwnerTest {
         assertNotNull(ticket);
         assertTrue(parkingLot.isFull());
 
-        verify(owner, times(1)).notifyFull(parkingLot.parkingLotId);
+        verify(owner, times(1)).notifyFull(parkingLot.getParkingLotId());
     }
 
     @Test
@@ -147,7 +147,7 @@ class OwnerTest {
 
         owner.park(car);
 
-        verify(owner, times(0)).notifyFull(parkingLot.parkingLotId);
+        verify(owner, times(0)).notifyFull(parkingLot.getParkingLotId());
     }
 
     @Test
@@ -165,8 +165,8 @@ class OwnerTest {
         owner.park(secondCar);
         owner.park(thirdCar);
 
-        verify(owner, times(1)).notifyFull(firstParkingLot.parkingLotId);
-        verify(owner, times(1)).notifyFull(secondParkingLot.parkingLotId);
+        verify(owner, times(1)).notifyFull(firstParkingLot.getParkingLotId());
+        verify(owner, times(1)).notifyFull(secondParkingLot.getParkingLotId());
     }
 
     // Tests for notifyWhenAvailable() method
@@ -180,7 +180,7 @@ class OwnerTest {
         Ticket ticket = owner.park(car);
         owner.unpark(ticket);
 
-        verify(owner, times(1)).notifyAvailable(parkingLot.parkingLotId);
+        verify(owner, times(1)).notifyAvailable(parkingLot.getParkingLotId());
     }
 
     @Test
@@ -195,7 +195,7 @@ class OwnerTest {
         owner.park(secondCar);
         owner.unpark(ticket);
 
-        verify(owner, times(0)).notifyAvailable(parkingLot.parkingLotId);
+        verify(owner, times(0)).notifyAvailable(parkingLot.getParkingLotId());
     }
 
     @Test
@@ -214,6 +214,6 @@ class OwnerTest {
         Ticket ticket = owner.park(thirdCar);
         owner.unpark(ticket);
 
-        verify(owner, times(1)).notifyAvailable(secondParkingLot.parkingLotId);
+        verify(owner, times(1)).notifyAvailable(secondParkingLot.getParkingLotId());
     }
 }

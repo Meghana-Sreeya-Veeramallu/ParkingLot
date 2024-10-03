@@ -4,11 +4,11 @@ public class Policeman implements Notifiable {
 
     public Policeman() {}
 
-    public void notifyFull(String parkingLotId) {
+    public void notifyFull(int parkingLotId) {
         System.out.println("Notifying to policeman: Parking lot " + parkingLotId + " is full");
     }
 
-    public void notifyAvailable(String parkingLotId) {
+    public void notifyAvailable(int parkingLotId) {
         System.out.println("Notifying to policeman: Parking lot " + parkingLotId + " is available");
     }
 }

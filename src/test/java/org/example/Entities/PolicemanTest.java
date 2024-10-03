@@ -20,7 +20,7 @@ class PolicemanTest {
 
         attendant.park(car);
 
-        verify(policeman, times(1)).notifyFull(parkingLot.parkingLotId);
+        verify(policeman, times(1)).notifyFull(parkingLot.getParkingLotId());
     }
 
     @Test
@@ -35,7 +35,7 @@ class PolicemanTest {
 
         attendant.park(car);
 
-        verify(policeman, times(0)).notifyFull(parkingLot.parkingLotId);
+        verify(policeman, times(0)).notifyFull(parkingLot.getParkingLotId());
     }
 
     @Test
@@ -55,8 +55,8 @@ class PolicemanTest {
         attendant.park(firstCar);
         attendant.park(secondCar);
 
-        verify(policeman, times(1)).notifyFull(firstParkingLot.parkingLotId);
-        verify(policeman, times(1)).notifyFull(secondParkingLot.parkingLotId);
+        verify(policeman, times(1)).notifyFull(firstParkingLot.getParkingLotId());
+        verify(policeman, times(1)).notifyFull(secondParkingLot.getParkingLotId());
     }
 
     @Test
@@ -78,9 +78,9 @@ class PolicemanTest {
         attendant.park(firstCar);
         attendant.park(secondCar);
 
-        verify(policeman, times(1)).notifyFull(firstParkingLot.parkingLotId);
-        verify(policeman, times(1)).notifyFull(secondParkingLot.parkingLotId);
-        verify(policeman, times(0)).notifyFull(thirdParkingLot.parkingLotId);
+        verify(policeman, times(1)).notifyFull(firstParkingLot.getParkingLotId());
+        verify(policeman, times(1)).notifyFull(secondParkingLot.getParkingLotId());
+        verify(policeman, times(0)).notifyFull(thirdParkingLot.getParkingLotId());
     }
 
     // Tests for notifyWhenAvailable() method
@@ -97,7 +97,7 @@ class PolicemanTest {
         Ticket ticket = attendant.park(car);
         attendant.unpark(ticket);
 
-        verify(policeman, times(1)).notifyAvailable(parkingLot.parkingLotId);
+        verify(policeman, times(1)).notifyAvailable(parkingLot.getParkingLotId());
     }
 
     @Test
@@ -112,16 +112,19 @@ class PolicemanTest {
 
         attendant.park(car);
 
-        verify(policeman, times(0)).notifyAvailable(parkingLot.parkingLotId);
+        verify(policeman, times(0)).notifyAvailable(parkingLot.getParkingLotId());
     }
 
     @Test
     void testNotifyWhenAvailableSecondParkingLotIsAvailable(){
-        Owner owner = spy(new Owner());
+        Owner owner = new Owner();
+        Policeman policeman = spy(new Policeman());
         ParkingLot firstParkingLot = new ParkingLot(2, owner);
         ParkingLot secondParkingLot = new ParkingLot(1, owner);
         owner.assign(owner, firstParkingLot);
         owner.assign(owner, secondParkingLot);
+        firstParkingLot.registerNotifiable(policeman);
+        secondParkingLot.registerNotifiable(policeman);
         Car firstCar = new Car("TS-1234", CarColor.BLACK);
         Car secondCar = new Car("TS-1235", CarColor.BLACK);
         Car thirdCar = new Car("TS-1236", CarColor.BLACK);
@@ -131,6 +134,6 @@ class PolicemanTest {
         Ticket ticket = owner.park(thirdCar);
         owner.unpark(ticket);
 
-        verify(owner, times(1)).notifyAvailable(secondParkingLot.parkingLotId);
+        verify(policeman, times(1)).notifyAvailable(secondParkingLot.getParkingLotId());
     }
 }
