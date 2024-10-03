@@ -12,7 +12,7 @@ class PolicemanTest {
     void testNotifyWhenFullParkingLotIsFull() {
         Owner owner = new Owner();
         Policeman policeman = spy(new Policeman());
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        ParkingLot parkingLot = owner.createParkingLot(1);
         Attendant attendant = new Attendant();
         owner.assign(attendant, parkingLot);
         policeman.registerNotifiable(parkingLot);
@@ -27,7 +27,7 @@ class PolicemanTest {
     void testNotifyWhenFullParkingLotIsNotFull() {
         Owner owner = new Owner();
         Policeman policeman = spy(new Policeman());
-        ParkingLot parkingLot = new ParkingLot(2, owner);
+        ParkingLot parkingLot = owner.createParkingLot(2);
         Attendant attendant = new Attendant();
         owner.assign(attendant, parkingLot);
         policeman.registerNotifiable(parkingLot);
@@ -42,8 +42,8 @@ class PolicemanTest {
     void testNotifyWhenFullAllParkingLotsAreFull() {
         Owner owner = new Owner();
         Policeman policeman = spy(new Policeman());
-        ParkingLot firstParkingLot = new ParkingLot(1, owner);
-        ParkingLot secondParkingLot = new ParkingLot(1, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(1);
         Attendant attendant = new Attendant();
         owner.assign(attendant, firstParkingLot);
         owner.assign(attendant, secondParkingLot);
@@ -63,9 +63,9 @@ class PolicemanTest {
     void testNotifyWhenFullSomeParkingLotsAreFull() {
         Owner owner = new Owner();
         Policeman policeman = spy(new Policeman());
-        ParkingLot firstParkingLot = new ParkingLot(1, owner);
-        ParkingLot secondParkingLot = new ParkingLot(1, owner);
-        ParkingLot thirdParkingLot = new ParkingLot(2, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(1);
+        ParkingLot thirdParkingLot = owner.createParkingLot(2);
         Attendant attendant = new Attendant();
         owner.assign(attendant, firstParkingLot);
         owner.assign(attendant, secondParkingLot);
@@ -88,7 +88,7 @@ class PolicemanTest {
     void testNotifyWhenAvailableParkingLotIsAvailable(){
         Owner owner = new Owner();
         Policeman policeman = spy(new Policeman());
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        ParkingLot parkingLot = owner.createParkingLot(1);
         Attendant attendant = new Attendant();
         owner.assign(attendant, parkingLot);
         policeman.registerNotifiable(parkingLot);
@@ -104,7 +104,7 @@ class PolicemanTest {
     void testNotifyWhenAvailableParkingLotIsNotAvailable(){
         Owner owner = new Owner();
         Policeman policeman = spy(new Policeman());
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        ParkingLot parkingLot = owner.createParkingLot(1);
         Attendant attendant = new Attendant();
         owner.assign(attendant, parkingLot);
         policeman.registerNotifiable(parkingLot);
@@ -119,8 +119,8 @@ class PolicemanTest {
     void testNotifyWhenAvailableSecondParkingLotIsAvailable(){
         Owner owner = new Owner();
         Policeman policeman = spy(new Policeman());
-        ParkingLot firstParkingLot = new ParkingLot(2, owner);
-        ParkingLot secondParkingLot = new ParkingLot(1, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(2);
+        ParkingLot secondParkingLot = owner.createParkingLot(1);
         owner.assign(owner, firstParkingLot);
         owner.assign(owner, secondParkingLot);
         policeman.registerNotifiable(firstParkingLot);

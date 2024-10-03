@@ -9,6 +9,11 @@ public class Owner extends Attendant implements Notifiable{
         super();
     }
 
+    public ParkingLot createParkingLot(int capacity){
+        ParkingLot parkingLot = new ParkingLot(capacity, this);
+        return parkingLot;
+    }
+
     public void assign(Attendant attendant, ParkingLot parkingLot) {
         if (parkingLot.owner != this) {
             throw new CannotAssignAttendantException("Only the owner of the parking lot can assign it.");

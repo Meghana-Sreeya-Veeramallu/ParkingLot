@@ -12,7 +12,7 @@ class AttendantTest {
     void testAssignParkingLot() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot parkingLot = new ParkingLot(5, owner);
+        ParkingLot parkingLot = owner.createParkingLot(5);
         assertDoesNotThrow(() -> owner.assign(attendant, parkingLot));
     }
 
@@ -20,8 +20,8 @@ class AttendantTest {
     void testAssignTwoParkingLots(){
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot firstParkingLot = new ParkingLot(5, owner);
-        ParkingLot secondParkingLot = new ParkingLot(5, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(5);
+        ParkingLot secondParkingLot = owner.createParkingLot(5);
 
         assertDoesNotThrow(() -> owner.assign(attendant, firstParkingLot));
         assertDoesNotThrow(() -> owner.assign(attendant, secondParkingLot));
@@ -31,7 +31,7 @@ class AttendantTest {
     void testAssignAParkingLotTwice(){
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot parkingLot = new ParkingLot(5, owner);
+        ParkingLot parkingLot = owner.createParkingLot(5);
 
         assertDoesNotThrow(() -> owner.assign(attendant, parkingLot));
         assertThrows(ParkingLotAlreadyAssigned.class, () -> owner.assign(attendant, parkingLot));
@@ -51,7 +51,7 @@ class AttendantTest {
     void testParkIfParkingLotIsNotFull() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot parkingLot = new ParkingLot(5, owner);
+        ParkingLot parkingLot = owner.createParkingLot(5);
         owner.assign(attendant, parkingLot);
         Car car = new Car("TS-1234", CarColor.RED);
 
@@ -62,7 +62,7 @@ class AttendantTest {
     void testParkShouldReturnTicket() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot parkingLot = new ParkingLot(5, owner);
+        ParkingLot parkingLot = owner.createParkingLot(5);
         owner.assign(attendant, parkingLot);
         Car car = new Car("TS-1234", CarColor.RED);
 
@@ -75,8 +75,8 @@ class AttendantTest {
     void testParkIfFirstParkingLotIsFull() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot firstParkingLot = new ParkingLot(1, owner);
-        ParkingLot secondParkingLot = new ParkingLot(1, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(1);
         owner.assign(attendant, firstParkingLot);
         owner.assign(attendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
@@ -90,8 +90,8 @@ class AttendantTest {
     void testParkIfAllParkingLotsAreFull() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot firstParkingLot = new ParkingLot(1, owner);
-        ParkingLot secondParkingLot = new ParkingLot(1, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(1);
         owner.assign(attendant, firstParkingLot);
         owner.assign(attendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
@@ -107,7 +107,7 @@ class AttendantTest {
     void testParkIfCarIsAlreadyParked() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot parkingLot = new ParkingLot(5, owner);
+        ParkingLot parkingLot = owner.createParkingLot(5);
         owner.assign(attendant, parkingLot);
         Car car = new Car("TS-1234", CarColor.RED);
         attendant.park(car);
@@ -119,8 +119,8 @@ class AttendantTest {
     void testParkIfCarIsAlreadyParkedInAnotherParkingLot() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot firstParkingLot = new ParkingLot(1, owner);
-        ParkingLot secondParkingLot = new ParkingLot(5, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(5);
         owner.assign(attendant, firstParkingLot);
         owner.assign(attendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
@@ -136,7 +136,7 @@ class AttendantTest {
     void testUnparkIfTicketIsValidForFirstCar() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot parkingLot = new ParkingLot(5, owner);
+        ParkingLot parkingLot = owner.createParkingLot(5);
         owner.assign(attendant, parkingLot);
         Car car = new Car("TS-1234", CarColor.RED);
         Ticket ticket = attendant.park(car);
@@ -148,7 +148,7 @@ class AttendantTest {
     void testUnparkIfTicketIsValidForSecondCar() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot parkingLot = new ParkingLot(5, owner);
+        ParkingLot parkingLot = owner.createParkingLot(5);
         owner.assign(attendant, parkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
@@ -164,8 +164,8 @@ class AttendantTest {
     void testUnparkIfTicketIsValidForSecondParkingLot() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot firstParkingLot = new ParkingLot(1, owner);
-        ParkingLot secondParkingLot = new ParkingLot(5, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(5);
         owner.assign(attendant, firstParkingLot);
         owner.assign(attendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
@@ -182,7 +182,7 @@ class AttendantTest {
     void testUnparkIfTicketIsInvalid() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot parkingLot = new ParkingLot(3, owner);
+        ParkingLot parkingLot = owner.createParkingLot(3);
         owner.assign(attendant, parkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
@@ -197,8 +197,8 @@ class AttendantTest {
     void testUnparkIfTicketIsInvalidForSecondParkingLot() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot firstParkingLot = new ParkingLot(1, owner);
-        ParkingLot secondParkingLot = new ParkingLot(5, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(5);
         owner.assign(attendant, firstParkingLot);
         owner.assign(attendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
@@ -214,8 +214,8 @@ class AttendantTest {
     void testUnparkIfACarUnparkedInFirstParkingLotAndACarIsTryingToPark(){
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot firstParkingLot = new ParkingLot(1, owner);
-        ParkingLot secondParkingLot = new ParkingLot(1, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(1);
         owner.assign(attendant, firstParkingLot);
         owner.assign(attendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);

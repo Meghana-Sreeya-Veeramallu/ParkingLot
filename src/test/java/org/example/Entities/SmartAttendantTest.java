@@ -13,7 +13,7 @@ class SmartAttendantTest {
     void testAssignParkingLot() {
         Owner owner = new Owner();
         Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
-        ParkingLot parkingLot = new ParkingLot(5, owner);
+        ParkingLot parkingLot = owner.createParkingLot(5);
 
         assertDoesNotThrow(() -> owner.assign(smartAttendant, parkingLot));
     }
@@ -22,8 +22,8 @@ class SmartAttendantTest {
     void testAssignTwoParkingLots(){
         Owner owner = new Owner();
         Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
-        ParkingLot firstParkingLot = new ParkingLot(5, owner);
-        ParkingLot secondParkingLot = new ParkingLot(5, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(5);
+        ParkingLot secondParkingLot = owner.createParkingLot(5);
 
         assertDoesNotThrow(() -> owner.assign(smartAttendant, firstParkingLot));
         assertDoesNotThrow(() -> owner.assign(smartAttendant, secondParkingLot));
@@ -33,7 +33,7 @@ class SmartAttendantTest {
     void testAssignAParkingLotTwice(){
         Owner owner = new Owner();
         Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
-        ParkingLot parkingLot = new ParkingLot(5, owner);
+        ParkingLot parkingLot = owner.createParkingLot(5);
 
         assertDoesNotThrow(() -> owner.assign(smartAttendant, parkingLot));
         assertThrows(ParkingLotAlreadyAssigned.class, () -> owner.assign(smartAttendant, parkingLot));
@@ -44,8 +44,8 @@ class SmartAttendantTest {
     void testParkWhenSecondParkingLotHasMoreAvailableSlots() {
         Owner owner = new Owner();
         Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
-        ParkingLot firstParkingLot = new ParkingLot(1, owner);
-        ParkingLot secondParkingLot = new ParkingLot(2, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(2);
         owner.assign(smartAttendant, firstParkingLot);
         owner.assign(smartAttendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
@@ -58,8 +58,8 @@ class SmartAttendantTest {
     void testParkWhenBothHaveEqualCapacity() {
         Owner owner = new Owner();
         Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
-        ParkingLot firstParkingLot = new ParkingLot(1, owner);
-        ParkingLot secondParkingLot = new ParkingLot(1, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(1);
         owner.assign(smartAttendant, firstParkingLot);
         owner.assign(smartAttendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
@@ -73,8 +73,8 @@ class SmartAttendantTest {
     void testParkWhenBothHaveEqualCapacityAfterACarIsParked() {
         Owner owner = new Owner();
         Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
-        ParkingLot firstParkingLot = new ParkingLot(2, owner);
-        ParkingLot secondParkingLot = new ParkingLot(1, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(2);
+        ParkingLot secondParkingLot = owner.createParkingLot(1);
         owner.assign(smartAttendant, firstParkingLot);
         owner.assign(smartAttendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
@@ -91,7 +91,7 @@ class SmartAttendantTest {
     void testUnparkIfTicketIsValidForFirstCar() {
         Owner owner = new Owner();
         Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
-        ParkingLot parkingLot = new ParkingLot(5, owner);
+        ParkingLot parkingLot = owner.createParkingLot(5);
         owner.assign(smartAttendant, parkingLot);
         Car car = new Car("TS-1234", CarColor.RED);
         Ticket ticket = smartAttendant.park(car);
@@ -103,7 +103,7 @@ class SmartAttendantTest {
     void testUnparkIfTicketIsValidForSecondCar() {
         Owner owner = new Owner();
         Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
-        ParkingLot parkingLot = new ParkingLot(5, owner);
+        ParkingLot parkingLot = owner.createParkingLot(5);
         owner.assign(smartAttendant, parkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
@@ -119,8 +119,8 @@ class SmartAttendantTest {
     void testUnparkIfTicketIsValidForSecondParkingLot() {
         Owner owner = new Owner();
         Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
-        ParkingLot firstParkingLot = new ParkingLot(1, owner);
-        ParkingLot secondParkingLot = new ParkingLot(5, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(5);
         owner.assign(smartAttendant, firstParkingLot);
         owner.assign(smartAttendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
@@ -137,7 +137,7 @@ class SmartAttendantTest {
     void testUnparkIfTicketIsInvalid() {
         Owner owner = new Owner();
         Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
-        ParkingLot parkingLot = new ParkingLot(3, owner);
+        ParkingLot parkingLot = owner.createParkingLot(3);
         owner.assign(smartAttendant, parkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
         Car secondCar = new Car("TS-1235", CarColor.BLUE);
@@ -152,8 +152,8 @@ class SmartAttendantTest {
     void testUnparkIfTicketIsInvalidForSecondParkingLot() {
         Owner owner = new Owner();
         Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
-        ParkingLot firstParkingLot = new ParkingLot(1, owner);
-        ParkingLot secondParkingLot = new ParkingLot(5, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(5);
         owner.assign(smartAttendant, firstParkingLot);
         owner.assign(smartAttendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
@@ -169,8 +169,8 @@ class SmartAttendantTest {
     void testUnparkIfACarUnparkedInFirstParkingLotAndACarIsTryingToPark(){
         Owner owner = new Owner();
         Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
-        ParkingLot firstParkingLot = new ParkingLot(1, owner);
-        ParkingLot secondParkingLot = new ParkingLot(1, owner);
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(1);
         owner.assign(smartAttendant, firstParkingLot);
         owner.assign(smartAttendant, secondParkingLot);
         Car firstCar = new Car("TS-1234", CarColor.RED);
