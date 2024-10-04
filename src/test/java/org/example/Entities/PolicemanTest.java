@@ -15,7 +15,7 @@ class PolicemanTest {
         ParkingLot parkingLot = owner.createParkingLot(1);
         Attendant attendant = new Attendant();
         owner.assign(attendant, parkingLot);
-        policeman.registerNotifiable(parkingLot);
+        owner.registerNotifiable(parkingLot, policeman);
         Car car = new Car("TS-1234", CarColor.BLACK);
 
         attendant.park(car);
@@ -30,7 +30,7 @@ class PolicemanTest {
         ParkingLot parkingLot = owner.createParkingLot(2);
         Attendant attendant = new Attendant();
         owner.assign(attendant, parkingLot);
-        policeman.registerNotifiable(parkingLot);
+        owner.registerNotifiable(parkingLot, policeman);
         Car car = new Car("TS-1234", CarColor.BLACK);
 
         attendant.park(car);
@@ -47,8 +47,8 @@ class PolicemanTest {
         Attendant attendant = new Attendant();
         owner.assign(attendant, firstParkingLot);
         owner.assign(attendant, secondParkingLot);
-        policeman.registerNotifiable(firstParkingLot);
-        policeman.registerNotifiable(secondParkingLot);
+        owner.registerNotifiable(firstParkingLot, policeman);
+        owner.registerNotifiable(secondParkingLot, policeman);
         Car firstCar = new Car("TS-1234", CarColor.BLACK);
         Car secondCar = new Car("TS-1235", CarColor.BLACK);
 
@@ -69,9 +69,9 @@ class PolicemanTest {
         Attendant attendant = new Attendant();
         owner.assign(attendant, firstParkingLot);
         owner.assign(attendant, secondParkingLot);
-        policeman.registerNotifiable(firstParkingLot);
-        policeman.registerNotifiable(secondParkingLot);
-        policeman.registerNotifiable(thirdParkingLot);
+        owner.registerNotifiable(firstParkingLot, policeman);
+        owner.registerNotifiable(secondParkingLot, policeman);
+        owner.registerNotifiable(thirdParkingLot, policeman);
         Car firstCar = new Car("TS-1234", CarColor.BLACK);
         Car secondCar = new Car("TS-1235", CarColor.BLACK);
 
@@ -91,7 +91,7 @@ class PolicemanTest {
         ParkingLot parkingLot = owner.createParkingLot(1);
         Attendant attendant = new Attendant();
         owner.assign(attendant, parkingLot);
-        policeman.registerNotifiable(parkingLot);
+        owner.registerNotifiable(parkingLot, policeman);
         Car car = new Car("TS-1234", CarColor.BLACK);
 
         Ticket ticket = attendant.park(car);
@@ -107,7 +107,7 @@ class PolicemanTest {
         ParkingLot parkingLot = owner.createParkingLot(1);
         Attendant attendant = new Attendant();
         owner.assign(attendant, parkingLot);
-        policeman.registerNotifiable(parkingLot);
+        owner.registerNotifiable(parkingLot, policeman);
         Car car = new Car("TS-1234", CarColor.BLACK);
 
         attendant.park(car);
@@ -123,8 +123,8 @@ class PolicemanTest {
         ParkingLot secondParkingLot = owner.createParkingLot(1);
         owner.assign(owner, firstParkingLot);
         owner.assign(owner, secondParkingLot);
-        policeman.registerNotifiable(firstParkingLot);
-        policeman.registerNotifiable(secondParkingLot);
+        owner.registerNotifiable(firstParkingLot, policeman);
+        owner.registerNotifiable(secondParkingLot, policeman);
         Car firstCar = new Car("TS-1234", CarColor.BLACK);
         Car secondCar = new Car("TS-1235", CarColor.BLACK);
         Car thirdCar = new Car("TS-1236", CarColor.BLACK);

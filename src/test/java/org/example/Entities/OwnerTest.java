@@ -124,6 +124,22 @@ class OwnerTest {
         assertThrows(CannotAssignAttendantException.class, () -> secondOwner.assign(secondOwner, parkingLot));
     }
 
+    //Tests for registerNotifiable() method
+    @Test
+    void testRegisterNotifiable() {
+        Owner owner = new Owner();
+        Policeman policeman = spy(new Policeman());
+        ParkingLot parkingLot = owner.createParkingLot(1);
+        Attendant attendant = new Attendant();
+        owner.assign(attendant, parkingLot);
+        owner.registerNotifiable(parkingLot, policeman);
+        Car car = new Car("TS-1234", CarColor.BLACK);
+
+        attendant.park(car);
+
+        verify(policeman, times(1)).notifyFull(parkingLot.getParkingLotId());
+    }
+
     // Tests for notifyWhenNull() method
     @Test
     void testNotifyWhenFullParkingLotIsFull() {
