@@ -37,6 +37,37 @@ class AttendantTest {
         assertThrows(ParkingLotAlreadyAssigned.class, () -> owner.assign(attendant, parkingLot));
     }
 
+    // Tests for assign() method for Attendant with SmartNextLotStrategy
+    @Test
+    void testAssignParkingLotUsingSmartAttendant() {
+        Owner owner = new Owner();
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        ParkingLot parkingLot = owner.createParkingLot(5);
+
+        assertDoesNotThrow(() -> owner.assign(smartAttendant, parkingLot));
+    }
+
+    @Test
+    void testAssignTwoParkingLotsUsingSmartAttendant(){
+        Owner owner = new Owner();
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        ParkingLot firstParkingLot = owner.createParkingLot(5);
+        ParkingLot secondParkingLot = owner.createParkingLot(5);
+
+        assertDoesNotThrow(() -> owner.assign(smartAttendant, firstParkingLot));
+        assertDoesNotThrow(() -> owner.assign(smartAttendant, secondParkingLot));
+    }
+
+    @Test
+    void testAssignAParkingLotTwiceUsingSmartAttendant(){
+        Owner owner = new Owner();
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        ParkingLot parkingLot = owner.createParkingLot(5);
+
+        assertDoesNotThrow(() -> owner.assign(smartAttendant, parkingLot));
+        assertThrows(ParkingLotAlreadyAssigned.class, () -> owner.assign(smartAttendant, parkingLot));
+    }
+
     // Test for park() method
     @Test
     void testParkIfNoParkingLotIsAssigned(){
@@ -129,6 +160,53 @@ class AttendantTest {
         attendant.park(secondCar);
 
         assertThrows(CarAlreadyParkedException.class, () -> attendant.park(firstCar));
+    }
+
+    // Tests for park() mthod for Attendant with SmartNextLotStrategy
+    @Test
+    void testParkWhenSecondParkingLotHasMoreAvailableSlots() {
+        Owner owner = new Owner();
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(2);
+        owner.assign(smartAttendant, firstParkingLot);
+        owner.assign(smartAttendant, secondParkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        smartAttendant.park(firstCar);
+
+        assertFalse(firstParkingLot.isFull());
+    }
+
+    @Test
+    void testParkWhenBothHaveEqualCapacity() {
+        Owner owner = new Owner();
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(1);
+        owner.assign(smartAttendant, firstParkingLot);
+        owner.assign(smartAttendant, secondParkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        smartAttendant.park(firstCar);
+
+        assertTrue(firstParkingLot.isFull());
+        assertFalse(secondParkingLot.isFull());
+    }
+
+    @Test
+    void testParkWhenBothHaveEqualCapacityAfterACarIsParked() {
+        Owner owner = new Owner();
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        ParkingLot firstParkingLot = owner.createParkingLot(2);
+        ParkingLot secondParkingLot = owner.createParkingLot(1);
+        owner.assign(smartAttendant, firstParkingLot);
+        owner.assign(smartAttendant, secondParkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        smartAttendant.park(firstCar);
+        smartAttendant.park(secondCar);
+
+        assertTrue(firstParkingLot.isFull());
+        assertFalse(secondParkingLot.isFull());
     }
 
     // Tests for unpark() method
@@ -226,5 +304,162 @@ class AttendantTest {
         attendant.unpark(ticket);
 
         assertDoesNotThrow(() -> attendant.park(thirdCar));
+    }
+
+    // Tests for unpark() method for Attendant with SmartNextLotStrategy
+    @Test
+    void testUnparkIfTicketIsValidForFirstCarUsingSmartAttendant() {
+        Owner owner = new Owner();
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        ParkingLot parkingLot = owner.createParkingLot(5);
+        owner.assign(smartAttendant, parkingLot);
+        Car car = new Car("TS-1234", CarColor.RED);
+        Ticket ticket = smartAttendant.park(car);
+
+        assertDoesNotThrow(() -> smartAttendant.unpark(ticket));
+    }
+
+    @Test
+    void testUnparkIfTicketIsValidForSecondCarUsingSmartAttendant() {
+        Owner owner = new Owner();
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        ParkingLot parkingLot = owner.createParkingLot(5);
+        owner.assign(smartAttendant, parkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        smartAttendant.park(firstCar);
+        Ticket ticket =  smartAttendant.park(secondCar);
+
+        Car unparkedCar = smartAttendant.unpark(ticket);
+
+        assertEquals(secondCar, unparkedCar);
+    }
+
+    @Test
+    void testUnparkIfTicketIsValidForSecondParkingLotUsingSmartAttendant() {
+        Owner owner = new Owner();
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(5);
+        owner.assign(smartAttendant, firstParkingLot);
+        owner.assign(smartAttendant, secondParkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        smartAttendant.park(firstCar);
+        Ticket ticket =  smartAttendant.park(secondCar);
+
+        Car unparkedCar = smartAttendant.unpark(ticket);
+
+        assertEquals(secondCar, unparkedCar);
+    }
+
+    @Test
+    void testUnparkIfTicketIsInvalidUsingSmartAttendant() {
+        Owner owner = new Owner();
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        ParkingLot parkingLot = owner.createParkingLot(3);
+        owner.assign(smartAttendant, parkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        smartAttendant.park(firstCar);
+        Ticket ticket =  smartAttendant.park(secondCar);
+        smartAttendant.unpark(ticket);
+
+        assertThrows(InvalidTicketException.class, () -> smartAttendant.unpark(ticket));
+    }
+
+    @Test
+    void testUnparkIfTicketIsInvalidForSecondParkingLotUsingSmartAttendant() {
+        Owner owner = new Owner();
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(5);
+        owner.assign(smartAttendant, firstParkingLot);
+        owner.assign(smartAttendant, secondParkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        smartAttendant.park(firstCar);
+        Ticket ticket =  smartAttendant.park(secondCar);
+        smartAttendant.unpark(ticket);
+
+        assertThrows(InvalidTicketException.class, () -> smartAttendant.unpark(ticket));
+    }
+
+    @Test
+    void testUnparkIfACarUnparkedInFirstParkingLotAndACarIsTryingToParkUsingSmartAttendant(){
+        Owner owner = new Owner();
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        ParkingLot firstParkingLot = owner.createParkingLot(1);
+        ParkingLot secondParkingLot = owner.createParkingLot(1);
+        owner.assign(smartAttendant, firstParkingLot);
+        owner.assign(smartAttendant, secondParkingLot);
+        Car firstCar = new Car("TS-1234", CarColor.RED);
+        Car secondCar = new Car("TS-1235", CarColor.BLUE);
+        Car thirdCar = new Car("TS-1236", CarColor.RED);
+        Ticket ticket = smartAttendant.park(firstCar);
+        smartAttendant.park(secondCar);
+        smartAttendant.unpark(ticket);
+
+        assertDoesNotThrow(() -> smartAttendant.park(thirdCar));
+    }
+
+    @Test
+    void testAttendantAndSmartAttendantParkConsecutively() {
+        Owner owner = new Owner();
+        ParkingLot firstParkingLot = owner.createParkingLot(2);
+        ParkingLot secondParkingLot = owner.createParkingLot(2);
+        ParkingLot thirdParkingLot = owner.createParkingLot(2);
+        Attendant attendant = new Attendant();
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        owner.assign(attendant, firstParkingLot);
+        owner.assign(attendant, secondParkingLot);
+        owner.assign(smartAttendant, secondParkingLot);
+        owner.assign(smartAttendant, thirdParkingLot);
+        Car firstCar = new Car("TS-1231", CarColor.RED);
+        Car secondCar = new Car("TS-1232", CarColor.BLUE);
+        Car thirdCar = new Car("TS-1233", CarColor.GREEN);
+        Car fourthCar = new Car("TS-1234", CarColor.BLACK);
+        Car fifthCar = new Car("TS-1235", CarColor.YELLOW);
+
+        attendant.park(firstCar);
+        smartAttendant.park(secondCar);
+        assertFalse(firstParkingLot.isFull());
+        attendant.park(thirdCar);
+        assertTrue(firstParkingLot.isFull());
+        smartAttendant.park(fourthCar);
+        assertFalse(secondParkingLot.isFull());
+        attendant.park(fifthCar);
+        assertTrue(secondParkingLot.isFull());
+        assertFalse(thirdParkingLot.isFull());
+    }
+
+    @Test
+    void testSmartAttendantAndAttendantParkConsecutively() {
+        Owner owner = new Owner();
+        ParkingLot firstParkingLot = owner.createParkingLot(2);
+        ParkingLot secondParkingLot = owner.createParkingLot(2);
+        ParkingLot thirdParkingLot = owner.createParkingLot(2);
+        Attendant smartAttendant = new Attendant(new SmartNextLotStrategy());
+        Attendant attendant = new Attendant();
+        owner.assign(smartAttendant, secondParkingLot);
+        owner.assign(smartAttendant, thirdParkingLot);
+        owner.assign(attendant, firstParkingLot);
+        owner.assign(attendant, secondParkingLot);
+        Car firstCar = new Car("TS-1231", CarColor.RED);
+        Car secondCar = new Car("TS-1232", CarColor.BLUE);
+        Car thirdCar = new Car("TS-1233", CarColor.GREEN);
+        Car fourthCar = new Car("TS-1234", CarColor.BLACK);
+        Car fifthCar = new Car("TS-1235", CarColor.YELLOW);
+
+        smartAttendant.park(firstCar);
+        attendant.park(secondCar);
+        assertFalse(firstParkingLot.isFull());
+        assertFalse(secondParkingLot.isFull());
+        smartAttendant.park(thirdCar);
+        assertFalse(secondParkingLot.isFull());
+        attendant.park(fourthCar);
+        assertTrue(firstParkingLot.isFull());
+        smartAttendant.park(fifthCar);
+        assertFalse(thirdParkingLot.isFull());
     }
 }
